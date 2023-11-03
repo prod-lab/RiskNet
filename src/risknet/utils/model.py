@@ -135,8 +135,9 @@ class XGBCVTrain(object):
                                  key=self.bst.get_score(importance_type='gain').get, reverse=True)
 
         logger.info("run predictions on train and  datasets")
-
-        train_label['prediction'] = self.bst.predict(dtrain, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
+        #TODO Uncomment 
+        train_label['prediction'] = self.bst.predict(dtrain)
+        #train_label['prediction'] = self.bst.predict(dtrain, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
         #EC: apparently this version of XGB says that self.bst doesn't have an attribute best_ntree_limit...will remove
         #ntree_limit=self.bst.best_iteration
 
@@ -158,7 +159,9 @@ class XGBCVTrain(object):
     def predict(self, scoring_data: DataFrame):
 
         dscore = xgb.DMatrix(scoring_data.values, feature_names=scoring_data.columns.values.tolist())
-        return self.bst.predict(dscore, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
+        return self.bst.predict(dscore)
+        #TODO figure out issue and uncomment and replace above
+        #return self.bst.predict(dscore, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
         #EC note: again, remove ntree_limit=self.bst.best_iteration. Instead using `iteration_range`
 
     def get_auc(self):

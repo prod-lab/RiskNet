@@ -7,7 +7,7 @@ from typing import List, Dict
 from pandas import DataFrame
 import warnings
 import pickle
-
+import ray 
 #User-Defined Imports
 import reducer
 
@@ -23,6 +23,7 @@ datatype: sets numerical variables as type int64 and categorical variables as st
 input:
 - df (DataFrame): passed in after Reducer
 '''
+@ray.remote
 def datatype(df):
     df.loc[:, numericals] = df.loc[:, numericals].astype('int64')
     df.loc[:, categoricals] = df.loc[:, categoricals].astype(str)
@@ -33,6 +34,7 @@ num_null: defines null values for numerical columns
 input:
 - df (DataFrame): passed in after Reducer
 '''
+@ray.remote
 def num_null(df):
     numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
                             'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}

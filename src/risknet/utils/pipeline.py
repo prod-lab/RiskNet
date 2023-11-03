@@ -20,9 +20,13 @@ import label_prep
 import reducer
 import encoder
 import model
+import ray 
 
+#initialize ray 
+ray.init()
 #Variables:
-fm_root = "/Users/emily/Desktop/local_180/data/" #location of FM data files
+fm_root = "c:\\Users\\mrpie\\dsc180a\\capstone\\data\\" 
+#location of FM data files
 data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
@@ -44,11 +48,10 @@ df = reducer.reduce(fm_root, data[0])
 #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
 
  #Define datatypes
-df = encoder.datatype(df)
-
+df = ray.get(encoder.datatype.remote(df))
 #Define where it should be null:
 #where we have explicit mappings of nulls
-df = encoder.num_null(df)
+df = ray.get(encoder.num_null.remote(df))
 
 # where we have explicit mappings of nulls
 df = encoder.cat_null(df)
@@ -68,7 +71,7 @@ df = encoder.rme(df, fm_root)
 
 #Data Cleaning 3: Remove badvars, scale
 #Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
-df = encoder.ff(df, fm_root) #Removes bad variables
+#df = encoder.ff(df, fm_root) #Removes bad variables
 
 #Scale the df
 df = encoder.scale(df, fm_root)
@@ -76,7 +79,6 @@ df = encoder.scale(df, fm_root)
 #Training the XGB Model
 data = model.xgb_train(fm_root, baseline=False)
 auc, pr, recall = model.xgb_eval(data)
-
 print(auc)
 print(pr)
 print(recall)
