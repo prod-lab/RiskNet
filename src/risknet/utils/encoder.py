@@ -47,6 +47,7 @@ cat_null: defines null values for categorical columns
 input:
 - df (DataFrame): passed in after Reducer
 '''
+@ray.remote
 def cat_null(df):
     categorical_null_map: Dict [str,str] = {'first_time_homebuyer':'9', 'occupancy_status': '9', 'channel':'9', 'property_type':'99', 'loan_purpose':'9'}
     for k,v in categorical_null_map.items():
@@ -59,6 +60,7 @@ input:
 - df (DataFrame)
 - cat_label (str): usually 'default'.
 '''
+
 def cat_enc(df, cat_label='default'):
     for i in categoricals:
         df["was_missing_" + i] = np.where(df[i].isnull(), 1, 0)
@@ -69,6 +71,7 @@ def cat_enc(df, cat_label='default'):
 ord_enc: fits Ordinal Encoder on training data and ordinally encodes all columns. Also puts ordinal encoder into a .pkl file for future use.
 input: df (DataFrame)
 '''
+
 def ord_enc(df, fm_root):
     ordinal: OrdinalEncoder = OrdinalEncoder()
     ordinal.fit(df.loc[df.flag == 'train'], categoricals) #Fit encoder on train

@@ -21,7 +21,7 @@ import reducer
 import encoder
 import model
 import ray 
-
+import time
 #initialize ray 
 ray.init()
 #Variables:
@@ -35,7 +35,8 @@ non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #Pipeline:
 
 #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
-label_prep.label_proc(fm_root, data)
+ray.get(label_prep.label_proc.remote(fm_root, data))
+
 
 #Step 2: Reducer: Returns df of combined data to encode
 df = reducer.reduce(fm_root, data[0]) 
@@ -47,19 +48,22 @@ df = reducer.reduce(fm_root, data[0])
 
 #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
 
+#Storing refs to remote ray task to avoid unecessary calls to ray.get()
+
  #Define datatypes
-df = ray.get(encoder.datatype.remote(df))
+encoder_datatype_ref = encoder.datatype.remote(df)
+
 #Define where it should be null:
 #where we have explicit mappings of nulls
-df = ray.get(encoder.num_null.remote(df))
-
 # where we have explicit mappings of nulls
-df = encoder.cat_null(df)
+encoder_cat_null_ref = encoder.cat_null.remote(encoder_datatype_ref)
+
+df = ray.get(encoder_cat_null_ref) #remove, might be unecessary to call get here 
 
 #Data Cleaning 2: Categorical, Ordinal, and RME Encoding
 # interaction effects
 df['seller_servicer_match'] = np.where(df.seller_name == df.servicer_name, 1, 0)
-
+#TODO: Change below function calls to ray (need to modify depdendent functions as well (for ord_enc and rme))
 '''Categorical Encoding'''
 df = encoder.cat_enc(df)
 
