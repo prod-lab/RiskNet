@@ -10,6 +10,8 @@ from typing import List, Dict, Tuple
 import pickle
 import logging
 import ray
+import pyarrow as pa
+import pyarrow.parquet as pq
 logger = logging.getLogger("freelunch")
 
 
@@ -63,12 +65,17 @@ def label_proc(fm_root, label_sets):
         performance_df = performance_df.sort_values(['loan_sequence_number', 'monthly_reporting_period'],
                                                     ascending=True).groupby('loan_sequence_number').head(60)
 
+        #TODO: Uncomment / Delete, trying to serialize into parquet instead of pkl
         flagged_loans: DataFrame = pd.DataFrame(performance_df.groupby("loan_sequence_number")['default'].max()).reset_index()
+        t1 = pa.Table.from_pandas(flagged_loans)
+        pq.write_table(t1,f'{fm_root}{i[2]}')
+        # with open(fm_root + i[1], 'wb') as f:
+        #     pickle.dump(flagged_loans, f)
 
-        with open(fm_root + i[1], 'wb') as f:
-            pickle.dump(flagged_loans, f)
-
+        
         regression_flagged_loans: DataFrame = pd.DataFrame(performance_df.loc[performance_df['default'] == 0].groupby("loan_sequence_number")['progress'].max()).reset_index().rename(columns={'progress':'undefaulted_progress'})
-
-        with open(fm_root + i[2], 'wb') as f:
-            pickle.dump(regression_flagged_loans, f)
+        t2 = pa.Table.from_pandas(regression_flagged_loans)
+        pq.write_table(t2,f'{fm_root} + {i[2]}')
+        # with open(fm_root + i[2], 'wb') as f:
+        #     pickle.dump(regression_flagged_loans, f)
+    

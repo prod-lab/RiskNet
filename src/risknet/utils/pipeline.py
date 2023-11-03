@@ -27,7 +27,9 @@ ray.init()
 #Variables:
 fm_root = "c:\\Users\\mrpie\\dsc180a\\capstone\\data\\" 
 #location of FM data files
-data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
+# TODO: Uncomment or delete below, trying parquet instead of qkl
+#data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
+data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.parquet', 'dev_reg_labels.parquet')]
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
