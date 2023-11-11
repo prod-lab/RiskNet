@@ -1,0 +1,7 @@
+data:
+  fm_root : "c:\\Users\\mrpie\\dsc180a\\capstone\\data\\"
+  files: 
+    - !!python/tuple ['historical_data_time_2009Q1.txt', 'dev_labels.parquet', 'dev_reg_labels.parquet']
+    
+
+

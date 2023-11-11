@@ -20,16 +20,27 @@ import label_prep
 import reducer
 import encoder
 import model
+import yaml
 import ray 
+import os
 import time
+import pathlib
 #initialize ray 
 ray.init()
+
 #Variables:
-fm_root = "c:\\Users\\mrpie\\dsc180a\\capstone\\data\\" 
+config_file = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','config.yaml')
+
+with open(config_file) as conf:
+    config = yaml.full_load(conf)
+#print(type(config))
+#print(config['fm_root'])
+fm_root = config['data']['fm_root'] 
 #location of FM data files
 # TODO: Uncomment or delete below, trying parquet instead of qkl
 #data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
-data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.parquet', 'dev_reg_labels.parquet')]
+# data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.parquet', 'dev_reg_labels.parquet')]
+data: List[Tuple[str, str, str]] = config['data']['files']
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
