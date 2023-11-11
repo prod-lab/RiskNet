@@ -130,6 +130,7 @@ dmypy.json
 
 # IDE
 .idea/
+.vscode/
 
 # secrets
 secrets/key-file
@@ -167,3 +168,7 @@ override.tf.json
 
 # weird mac things
 *.swp
+
+#data storage location
+src/risknet/data/*
+!src/risknet/data/__init__.py
