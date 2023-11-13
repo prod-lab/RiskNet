@@ -7,7 +7,7 @@ Check out the comments to see what each part of the code does.
 #Global Imports:
 import pandas as pd
 from pandas import DataFrame
-
+import os
 import numpy as np
 
 from typing import List, Dict, Tuple
@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger("freelunch")
 
 #User-Defined Imports:
-import model
+# import model
 
 #Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
 import sys
@@ -26,7 +26,8 @@ import reducer
 import encoder
 
 #Variables:
-fm_root = "/Users/emily/Desktop/local_180/data/" #location of FM data files
+cur_path = os.path.dirname(__file__)
+fm_root: str = os.path.join(cur_path, '..', 'data\\') #location of FM data files
 data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
@@ -36,7 +37,7 @@ non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 
 #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
 label_prep.label_proc(fm_root, data)
-
+print("DONE WITH LABEL PREP")
 #Step 2: Reducer: Returns df of combined data to encode
 df = reducer.reduce(fm_root, data[0]) 
 #As of right now, we are only pulling 2009 data. So we only need data[0].
@@ -78,9 +79,9 @@ df = encoder.ff(df, fm_root) #Removes bad variables
 df = encoder.scale(df, fm_root)
 
 #Training the XGB Model
-data = model.xgb_train(fm_root, baseline=False)
-auc, pr, recall = model.xgb_eval(data)
+# data = model.xgb_train(fm_root, baseline=False)
+# auc, pr, recall = model.xgb_eval(data)
 
-print(auc)
-print(pr)
-print(recall)
+# print(auc)
+# print(pr)
+# print(recall)

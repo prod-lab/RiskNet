@@ -2,6 +2,8 @@
 
 #Imports:
 import pandas as pd
+import dask.dataframe as dd
+import dask.dataframe
 from pandas import DataFrame
 import numpy as np
 from typing import List, Dict, Tuple
@@ -38,6 +40,11 @@ def label_proc(fm_root, label_sets):
                                 "delinquent_accrued_interest"]
     
     for i in label_sets:
+        #Possible hyperparameters: blocksize (when reading from dd directly), npartitions
+        #Reading from df then converting to dd bc we want to get nrows w/o computing until
+        #   later in the pipeline
+
+        #Will change when running on full data
         performance_df: DataFrame = pd.read_csv(fm_root + i[0], sep='|', index_col=False,
                                             names=performance_cols, nrows=10_000_000).loc[:,
                                     ["loan_sequence_number", "monthly_reporting_period",
@@ -45,17 +52,23 @@ def label_proc(fm_root, label_sets):
                                     "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
                                     #EC: Added nrows to make faster
 
-        performance_df.loc[:, ["current_loan_delinquency_status", "zero_balance_code"]] = performance_df.loc[:, [
-                                                                                "current_loan_delinquency_status",
-                                                                                "zero_balance_code"]].astype(str)
 
-        performance_df['default'] = np.where(
+        # performance_df: dask.dataframe = dd.from_pandas(init_df, npartitions=10)
+
+        # performance_df.loc[:, ["current_loan_delinquency_status", "zero_balance_code"]] = performance_df.loc[:, [
+        #                                                                         "current_loan_delinquency_status",
+        #                                                                         "zero_balance_code"]].astype(str)
+        # performance_df = performance_df.astype({"current_loan_delinquency_status":str, "zero_balance_code": str})
+
+        performance_df['default'] = pd.Series(np.where(
             ~performance_df['current_loan_delinquency_status'].isin(["XX", "0", "1", "2", "R", "   "]) |
             performance_df[
-                'zero_balance_code'].isin(['3.0', '9.0', '6.0']), 1, 0)
+                'zero_balance_code'].isin(['3.0', '9.0', '6.0']), 1, 0))
 
-        performance_df['progress'] = performance_df["loan_age"] / (performance_df["loan_age"] + performance_df["remaining_months_to_maturity"])
+        # loan_age = performance_df["loan_age"].compute() 
+        performance_df['progress'] =  performance_df["loan_age"] / (performance_df["loan_age"] + performance_df["remaining_months_to_maturity"])
 
+        # performance_df = performance_df.compute()
         performance_df = performance_df.sort_values(['loan_sequence_number', 'monthly_reporting_period'],
                                                     ascending=True).groupby('loan_sequence_number').head(60)
 
