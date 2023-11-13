@@ -45,7 +45,7 @@ def label_proc(fm_root, label_sets):
         #   later in the pipeline
 
         #Will change when running on full data
-        performance_df: DataFrame = pd.read_csv(fm_root + i[0], sep='|', index_col=False,
+        performance_df: DataFrame = dd.read_csv(fm_root + i[0], sep='|', index_col=False,
                                             names=performance_cols, nrows=10_000_000).loc[:,
                                     ["loan_sequence_number", "monthly_reporting_period",
                                     "current_loan_delinquency_status",
@@ -53,22 +53,22 @@ def label_proc(fm_root, label_sets):
                                     #EC: Added nrows to make faster
 
 
-        # performance_df: dask.dataframe = dd.from_pandas(init_df, npartitions=10)
+        performance_df: dask.dataframe = dd.from_pandas(init_df, npartitions=10)
 
         # performance_df.loc[:, ["current_loan_delinquency_status", "zero_balance_code"]] = performance_df.loc[:, [
         #                                                                         "current_loan_delinquency_status",
         #                                                                         "zero_balance_code"]].astype(str)
-        # performance_df = performance_df.astype({"current_loan_delinquency_status":str, "zero_balance_code": str})
+        performance_df = performance_df.astype({"current_loan_delinquency_status":str, "zero_balance_code": str})
 
         performance_df['default'] = pd.Series(np.where(
             ~performance_df['current_loan_delinquency_status'].isin(["XX", "0", "1", "2", "R", "   "]) |
             performance_df[
                 'zero_balance_code'].isin(['3.0', '9.0', '6.0']), 1, 0))
 
-        # loan_age = performance_df["loan_age"].compute() 
+
         performance_df['progress'] =  performance_df["loan_age"] / (performance_df["loan_age"] + performance_df["remaining_months_to_maturity"])
 
-        # performance_df = performance_df.compute()
+        performance_df = performance_df.compute()
         performance_df = performance_df.sort_values(['loan_sequence_number', 'monthly_reporting_period'],
                                                     ascending=True).groupby('loan_sequence_number').head(60)
 
