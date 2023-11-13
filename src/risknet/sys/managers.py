@@ -1,4 +1,4 @@
-from risknet.utils.log import logger
+from risknet.sys.log import logger
 from risknet.config import cfg
 from dask.distributed import LocalCluster, Client
 from dask_kubernetes import KubeCluster

@@ -135,9 +135,8 @@ class XGBCVTrain(object):
                                  key=self.bst.get_score(importance_type='gain').get, reverse=True)
 
         logger.info("run predictions on train and  datasets")
-        #TODO Uncomment 
+
         train_label['prediction'] = self.bst.predict(dtrain)
-        #train_label['prediction'] = self.bst.predict(dtrain, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
         #EC: apparently this version of XGB says that self.bst doesn't have an attribute best_ntree_limit...will remove
         #ntree_limit=self.bst.best_iteration
 
@@ -160,9 +159,8 @@ class XGBCVTrain(object):
 
         dscore = xgb.DMatrix(scoring_data.values, feature_names=scoring_data.columns.values.tolist())
         return self.bst.predict(dscore)
-        #TODO figure out issue and uncomment and replace above
-        #return self.bst.predict(dscore, iteration_range=(self.bst.best_iteration, self.bst.best_iteration))
         #EC note: again, remove ntree_limit=self.bst.best_iteration. Instead using `iteration_range`
+        #EC note 2: removeed iteration_range because it tanked performance :/
 
     def get_auc(self):
         return self.train_auc
@@ -230,7 +228,6 @@ def xgb_auc(data):
     fpr, tpr, thresholds = roc_curve(df_val_label[cat_label], df_val_label['xgb_score'], pos_label=1)
     xgb_val_auc: float = auc(fpr, tpr)
 
-    x = ['Train', 'Test', 'Val']
     aucs = [xgb_train_auc, xgb_test_auc, xgb_val_auc]
     return aucs
 

@@ -1,7 +1,7 @@
 from risknet.config import data_cfg
-from risknet.utils.managers import DaskManager
+from risknet.sys.managers import DaskManager
 import dask.dataframe as dd
-from risknet.utils.log import logger
+from risknet.sys.log import logger
 
 def execute(bucket_root: str = data_cfg.titanic_root) -> None:
     """

@@ -16,31 +16,18 @@ import logging
 logger = logging.getLogger("freelunch")
 
 #User-Defined Imports:
+import model
+
+#Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
+import sys
+sys.path.append(r"src/risknet/proc") #reorient directory to access proc .py files
 import label_prep
 import reducer
 import encoder
-import model
-import yaml
-import ray 
-import os
-import time
-import pathlib
-#initialize ray 
-ray.init()
 
 #Variables:
-config_file = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','config.yaml')
-
-with open(config_file) as conf:
-    config = yaml.full_load(conf)
-#print(type(config))
-#print(config['fm_root'])
-fm_root = config['data']['fm_root'] 
-#location of FM data files
-# TODO: Uncomment or delete below, trying parquet instead of qkl
-#data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
-# data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.parquet', 'dev_reg_labels.parquet')]
-data: List[Tuple[str, str, str]] = config['data']['files']
+fm_root = "/Users/emily/Desktop/local_180/data/" #location of FM data files
+data: List[Tuple[str, str, str]] = [('historical_data_time_2009Q1.txt', 'dev_labels.pkl', 'dev_reg_labels.pkl')]
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
@@ -48,8 +35,7 @@ non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #Pipeline:
 
 #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
-ray.get(label_prep.label_proc.remote(fm_root, data))
-
+label_prep.label_proc(fm_root, data)
 
 #Step 2: Reducer: Returns df of combined data to encode
 df = reducer.reduce(fm_root, data[0]) 
@@ -61,22 +47,20 @@ df = reducer.reduce(fm_root, data[0])
 
 #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
 
-#Storing refs to remote ray task to avoid unecessary calls to ray.get()
-
  #Define datatypes
-encoder_datatype_ref = encoder.datatype.remote(df)
+df = encoder.datatype(df)
 
 #Define where it should be null:
 #where we have explicit mappings of nulls
-# where we have explicit mappings of nulls
-encoder_cat_null_ref = encoder.cat_null.remote(encoder_datatype_ref)
+df = encoder.num_null(df)
 
-df = ray.get(encoder_cat_null_ref) #remove, might be unecessary to call get here 
+# where we have explicit mappings of nulls
+df = encoder.cat_null(df)
 
 #Data Cleaning 2: Categorical, Ordinal, and RME Encoding
 # interaction effects
 df['seller_servicer_match'] = np.where(df.seller_name == df.servicer_name, 1, 0)
-#TODO: Change below function calls to ray (need to modify depdendent functions as well (for ord_enc and rme))
+
 '''Categorical Encoding'''
 df = encoder.cat_enc(df)
 
@@ -88,7 +72,7 @@ df = encoder.rme(df, fm_root)
 
 #Data Cleaning 3: Remove badvars, scale
 #Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
-#df = encoder.ff(df, fm_root) #Removes bad variables
+df = encoder.ff(df, fm_root) #Removes bad variables
 
 #Scale the df
 df = encoder.scale(df, fm_root)
@@ -96,6 +80,7 @@ df = encoder.scale(df, fm_root)
 #Training the XGB Model
 data = model.xgb_train(fm_root, baseline=False)
 auc, pr, recall = model.xgb_eval(data)
+
 print(auc)
 print(pr)
 print(recall)

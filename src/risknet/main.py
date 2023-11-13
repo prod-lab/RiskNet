@@ -6,7 +6,7 @@ import time
 from typing import Dict, Tuple
 
 from risknet.config import cfg
-from risknet.utils.log import logger
+from risknet.sys.log import logger
 
 
 def get_args() -> Namespace:

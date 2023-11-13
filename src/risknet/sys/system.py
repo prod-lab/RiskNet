@@ -1,4 +1,4 @@
-from risknet.utils.log import logger
+from risknet.sys.log import logger
 from pathlib import Path
 
 
