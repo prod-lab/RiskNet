@@ -14,7 +14,7 @@ import reducer
 #Global Variables:
 numericals: List[str] = ['credit_score', 'number_of_units', 'orig_combined_loan_to_value', 'dti_ratio', 'original_unpaid_principal_balance', 'original_ltv', 'number_of_borrowers']
 categoricals: List[str] = ['first_time_homebuyer', 'occupancy_status', 'channel', 'prepayment_penalty_mortgage', 'product_type', 'property_type', 'loan_purpose', 'seller_name', 'servicer_name', 'super_conforming_flag']
-non_train_columns: List[str] = ['default', 'undefaurm -rf .git*lted_progress', 'flag']
+non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag', "loan_sequence_number"]
 
 #Functions:
 #Define datatypes
@@ -133,7 +133,7 @@ inputs:
 def scale(df, fm_root):
     '''Scaling'''
     train_columns: List[str] = [i for i in df.columns.to_list() if i not in non_train_columns]
-    train_columns.remove('loan_sequence_number') #This is not a numerical column so it can't be scaled with min/max subtraction
+    #train_columns.remove('loan_sequence_number') #This is not a numerical column so it can't be scaled with min/max subtraction
 
     train_mins = df.loc[df['flag'] == 'train'].loc[:, train_columns].min()
 
