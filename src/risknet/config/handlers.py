@@ -25,10 +25,9 @@ class Config(object):
 			path += abs_config_path
 		else:
 			path += join(pathlib.Path(__file__).parent.resolve(), "conf.yaml")
-
 		with open(path, 'r') as stream:
 			try:
-				return yaml.safe_load(stream)
+				return yaml.full_load(stream)
 			except yaml.YAMLError as exc:
 				logger.exception(exc)
 		return {}
@@ -58,6 +57,12 @@ class DataConfig(Config):
 	def titanic_root(self) -> str:
 		return self._config["data"]["titanic_root"]
 
+	@property 
+	def fm_root(self) -> str:
+		return self._config["data"]["fm_root"]
+	@property
+	def data(self) -> str:
+		return self._config["data"]["files"]
 
 class ModelConfig(Config):
 	@property

@@ -8,7 +8,6 @@ from typing import Dict, Tuple
 from risknet.config import cfg
 from risknet.sys.log import logger
 
-
 def get_args() -> Namespace:
     """Get arguments passed to entrypoint."""
 
@@ -38,6 +37,7 @@ def get_job_args(arguments: Namespace) -> Tuple[Dict[str, str],
         job_args_tuples = [arg_str.split('=') for arg_str in
                            arguments.job_args]
         logger.info('job_args_tuples: %s' % job_args_tuples)
+        print(job_args_tuples)
         job_args = {a[0]: a[1] for a in job_args_tuples}
     else:
         job_args = {}
@@ -52,10 +52,10 @@ def run_job(args: Namespace, job_args: Dict[str, str]) -> None:
     """
     Run the desired job with any indicated module and job arguments.
     """
-
     job_module = importlib.import_module(args.job_name)
 
     start = time.time()
+    
     job_module.execute(**job_args)  # type: ignore
     end = time.time()
 
@@ -66,10 +66,13 @@ def run_job(args: Namespace, job_args: Dict[str, str]) -> None:
 
 
 if __name__ == "__main__":
+    #Currently only the following modules can be run from main : label_prep.py,pipeline.py
+    #add an execute function to a module to make it runnable via main entrypoint. 
     args = get_args()
-
+    print(args)
     job_args, env = get_job_args(args)
-
+    
+    print('job_args',job_args)
     os.environ.update(env)
-
     run_job(args, job_args)
+
