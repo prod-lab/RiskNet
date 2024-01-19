@@ -31,7 +31,7 @@ def reduce(fm_root, i):
                             'postal_code', 'mortgage_insurance_percent', 'original_loan_term']
 
     df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + 'historical_data_2009Q1.txt', sep='|', index_col=False,
-                                                            names=origination_cols, nrows=1_000_000).merge(
+                                                            names=origination_cols).merge(
             pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number",
             how="inner").merge(
             pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number",
