@@ -96,3 +96,12 @@ auc, pr, recall = model.xgb_eval(data)
 print(auc)
 print(pr)
 print(recall)
+
+print("RAY TUNE TESTING BELOW")
+
+data = model.xgb_train(fm_root, baseline=False)
+auc, pr, recall = model.xgb_eval(data)
+
+print(auc)
+print(pr)
+print(recall)

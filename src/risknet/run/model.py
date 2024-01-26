@@ -155,6 +155,130 @@ class XGBCVTrain(object):
         total = time_end - time_begin
 
         logger.info("Total time: " + str(round((total / 60), 2)) + "minutes")
+        
+        
+### Alternative Train Function Undergoing Testing 
+### Uses ray tune for HP testing, still using Bayesian Optimization
+    def train_RT1(self, train_data: DataFrame, train_label: DataFrame, 
+              val_data: DataFrame, val_label: DataFrame, target: str, objective: str, maximize: bool = True, 
+              min_boosting_rounds: int = 3, max_boosting_rounds: int = 100, #bayes_n_init: int =  50, bayes_n_iter: int = 5
+              ):
+
+        """Run xgboost training job.  Consider the following evaluation metrics and be mindful of whether you are maximizing or minimizing:
+        # error will require that maximize equals false.. we want to minimize..
+        #error
+        #error@t: a different than 0.5 binary classification threshold value could be specified by providing a numerical value through ‘t’.
+        #auc: Area under the curve
+        # aucpr: Area under the PR curve
+        #map: Mean Average Precision
+        #rmse: root mean square error (regression)
+        # mae: mean absolute error (regression)
+        # mlogloss: Multiclass logloss.  This is more like how you understand logloss.
+
+                """
+
+        time_begin = time.time()
+
+        logger.info("BEGIN LOGIT SMALL TRAINING JOB")
+
+        logger.info("Train on full data")
+
+        logger.info("Convert to DMatrix")
+
+        dtrain = xgb.DMatrix(train_data.values, label=train_label.values,
+                             feature_names=train_data.columns.values.tolist())
+        
+        dval = xgb.DMatrix(val_data, label=val_label, nthread=-1)
+
+        logger.info("Define Evaluation Function")
+
+        #Evaluates XGB features and selects best values for HYPERparameters based on Ray Tune
+        def xgb_evaluate(config):
+            param = {'eta': config['eta'],
+                 'gamma': config['gamma'],
+                 'max_depth': int(config['max_depth']),
+                 'min_child_weight': int(config['min_child_weight']),
+                 'subsample': config['subsample'],
+                 'colsample_bytree': config['colsample_bytree'],
+                 'lambda': config['l_2'],
+                 'alpha': config['l_1'],
+                 'objective': 'binary:logistic',
+                 'booster': 'gbtree',
+                 'verbosity': 2,
+                 }
+
+            test_metric: float = \
+            xgb.cv(param, dtrain, num_boost_round=int(rounds), 
+                   nfold=5, stratified=True, early_stopping_rounds=20,
+                   metrics=objective,
+                   maximize=maximize)['test-' + objective[0] + '-mean'].mean()
+
+            if maximize:
+                tune.report(score = test_metric)
+            else:
+                tune.report(score = -test_metric)
+
+        config = {
+                "eta": tune.uniform(0.01, 0.1),
+                "gamma": tune.uniform(0.05, 1.0),
+                "max_depth": tune.randint(3, 25),
+                "min_child_weight": tune.randint(3, 7),
+                "subsample": tune.uniform(0.6, 1.0),
+                "colsample_bytree": tune.uniform(0.6, 1.0),
+                "l_2": tune.uniform(0.01, 1.0),
+                "l_1": tune.uniform(0, 1.0),
+                "rounds": tune.randint(min_boosting_rounds, max_boosting_rounds)
+            }
+        
+        analysis = tune.run(
+                            xgb_train,
+                            config=config,
+                            metric="score",
+                            mode="max" if maximize else "min"
+                            )
+        
+        best_params = analysis.best_config
+
+        logger.info("Best parameters are:")
+        logger.info(str(best_params))
+
+        self.bst = xgb.train(best_params, dtrain, 
+                             num_boost_round=int(best_params['rounds']), 
+                             evals =[(dval, 'val')],
+                             maximize=maximize, 
+                             verbose_eval=True) #.train returns a Booster object
+
+
+        logger.info("Importance: ")
+
+        logger.info(
+            sorted(self.bst.get_score(importance_type='gain'), key=self.bst.get_score(importance_type='gain').get,
+                   reverse=True))
+
+        self.importance = sorted(self.bst.get_score(importance_type='gain'),
+                                 key=self.bst.get_score(importance_type='gain').get, reverse=True)
+
+        logger.info("run predictions on train and  datasets")
+
+        train_label['prediction'] = self.bst.predict(dtrain)
+        #EC: apparently this version of XGB says that self.bst doesn't have an attribute best_ntree_limit...will remove
+        #ntree_limit=self.bst.best_iteration
+
+        logger.info("Generate Metrics")
+
+        fpr, tpr, _ = metrics.roc_curve(train_label[target], train_label['prediction'], pos_label=1)
+
+        self.train_auc: str = str(metrics.auc(fpr, tpr))
+        logger.info("Train AUC: " + self.train_auc)
+
+        logger.info("XGB TRAINING AND EVALUATION OUTPUT DONE")
+
+        time_end = time.time()
+
+        total = time_end - time_begin
+
+        logger.info("Total time: " + str(round((total / 60), 2)) + "minutes")
+
 
     def predict(self, scoring_data: DataFrame):
 
@@ -210,6 +334,39 @@ def xgb_train(fm_root, baseline=False, cat_label='default'):
         pickle.dump(xgb_cv, f)
 
     return [df_train_label, df_test_label, df_val_label]
+
+def xgb_train_RT(fm_root, baseline=False, cat_label='default'):
+    # ... (same as before) but RAY TUNE BRAH
+
+    # Train model instance
+    best_config = train_RT1(df_train_minmax, df_train_label, df_val_minmax, df_val_label, cat_label, ['auc'], True, 3, 100)
+
+    # Create a new XGBoost model with the best configuration
+    param = {'eta': best_config['eta'],
+             'gamma': best_config['gamma'],
+             'max_depth': int(best_config['max_depth']),
+             'min_child_weight': int(best_config['min_child_weight']),
+             'subsample': best_config['subsample'],
+             'colsample_bytree': best_config['colsample_bytree'],
+             'lambda': best_config['l_2'],
+             'alpha': best_config['l_1'],
+             'objective': 'binary:logistic',
+             'booster': 'gbtree',
+             'verbosity': 2,
+             }
+    num_boost_round = int(best_config['rounds'])
+    bst = xgb.train(param, dtrain, num_boost_round)
+
+    # Predict on training set using the new model
+    df_train_label['xgb_score'] = bst.predict(df_train_minmax)
+    df_test_label['xgb_score'] = bst.predict(df_test_minmax)
+    df_val_label['xgb_score'] = bst.predict(df_val_minmax)
+
+    # Save the new model
+    bst.save_model(fm_root + 'xgb_cv.model')
+
+    return [df_train_label, df_test_label, df_val_label]
+
 
 def xgb_eval(data):
     return [xgb_auc(data), xgb_pr(data), xgb_recall(data)]

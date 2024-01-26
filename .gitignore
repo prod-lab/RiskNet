@@ -170,3 +170,13 @@ override.tf.json
 
 # weird mac things
 *.swp
+src/risknet/data/dev_labels.pkl
+src/risknet/data/dev_reg_labels.pkl
+src/risknet/data/df.pkl
+src/risknet/data/historical_data_2009Q1.txt
+src/risknet/data/historical_data_time_2009Q1.txt
+src/risknet/data/ordinal.pkl
+src/risknet/data/rme.pkl
+src/risknet/data/train_maxs.pkl
+src/risknet/data/train_mins.pkl
+src/risknet/data/xgb_cv.pkl
