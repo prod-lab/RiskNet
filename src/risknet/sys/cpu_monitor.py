@@ -1,4 +1,5 @@
-import psutil
+#Imports
+import psutil #Note: psutil should be automatically installed with python >= 3.9 via site-packages
 
 '''
 Determine and print CPU/resource baseline for the pipeline.
