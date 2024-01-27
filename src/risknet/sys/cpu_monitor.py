@@ -17,7 +17,7 @@ def baseline():
     mem = psutil.virtual_memory()
     total = mem[0]
 
-    return (logic, phys, total)
+    return {"num_logical_cpus:": logic, "num_physical_cores": phys, "total_avail_memory": total}
 
 '''
 Determine the disk status (how much space is left on disk) at a given time.

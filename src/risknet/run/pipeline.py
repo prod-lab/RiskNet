@@ -41,10 +41,15 @@ from risknet.proc import label_prep
 from risknet.proc import reducer
 from risknet.proc import encoder
 from risknet.proc import fe
+from risknet.sys import cpu_monitor
 
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf_template.yaml')
 with open(config_path) as conf:
     config = yaml.full_load(conf)
+
+#Get information on system baselines:
+logger.info("System baseline: ")
+logger.info(cpu_monitor.baseline())
 
 #Variables:
 fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data files
