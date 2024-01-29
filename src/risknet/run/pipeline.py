@@ -21,7 +21,7 @@ logger = logging.getLogger("freelunch")
 #This ensures the info-level logs get stored in a new file called "test.log"
 logging.basicConfig(
     filename="test.log",
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s:%(levelname)s:%(message)s"
     )
 
