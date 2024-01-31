@@ -33,6 +33,7 @@ def disk_status(fm_root):
     mem = psutil.virtual_memory() #returns a named tuple
     used_mem = mem[0:3] 
     #Returns named tuple of total, available, and percent of memory used
+    return {"num_disks_used (total, used, free, and percent of disk)": disks, "memory_use (total, available, percent of memory used)": used_mem}
 
 '''
 Determine how much CPU and time has been used since it was last called.
