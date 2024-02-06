@@ -1,0 +1,321 @@
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 180549 entries, 0 to 180548
+Data columns (total 50 columns):
+ #   Column                                         Non-Null Count   Dtype  
+---  ------                                         --------------   -----  
+ 0   credit_score                                   180549 non-null  float64
+ 1   first_payment_date                             180549 non-null  float64
+ 2   number_of_units                                180549 non-null  float64
+ 3   orig_combined_loan_to_value                    180549 non-null  float64
+ 4   dti_ratio                                      180549 non-null  float64
+ 5   original_unpaid_principal_balance              180549 non-null  float64
+ 6   original_ltv                                   180549 non-null  float64
+ 7   number_of_borrowers                            180549 non-null  float64
+ 8   undefaulted_progress                           180549 non-null  float64
+ 9   seller_servicer_match                          180549 non-null  int64  
+ 10  was_missing_first_time_homebuyer               180549 non-null  int64  
+ 11  first_time_homebuyer_ord_enc                   180549 non-null  float64
+ 12  occupancy_status_ord_enc                       180549 non-null  float64
+ 13  channel_ord_enc                                180549 non-null  float64
+ 14  property_type_ord_enc                          180549 non-null  float64
+ 15  loan_purpose_ord_enc                           180549 non-null  float64
+ 16  seller_name_ord_enc                            180549 non-null  float64
+ 17  servicer_name_ord_enc                          180549 non-null  float64
+ 18  super_conforming_flag_ord_enc                  180549 non-null  int64  
+ 19  first_time_homebuyer_enc                       180549 non-null  float64
+ 20  occupancy_status_enc                           180549 non-null  float64
+ 21  channel_enc                                    180549 non-null  float64
+ 22  property_type_enc                              180549 non-null  float64
+ 23  loan_purpose_enc                               180549 non-null  float64
+ 24  seller_name_enc                                180549 non-null  float64
+ 25  servicer_name_enc                              180549 non-null  float64
+ 26  super_conforming_flag_enc                      180549 non-null  float64
+ 27  was_missing_credit_score                       180549 non-null  int64  
+ 28  was_missing_orig_combined_loan_to_value        180549 non-null  int64  
+ 29  was_missing_dti_ratio                          180549 non-null  int64  
+ 30  was_missing_original_ltv                       180549 non-null  int64  
+ 31  was_missing_number_of_borrowers                180549 non-null  int64  
+ 32  loan_sequence_number                           180549 non-null  object 
+ 33  default                                        180549 non-null  int64  
+ 34  flag                                           180549 non-null  object 
+ 35  was_missing_occupancy_status                   0 non-null       float64
+ 36  was_missing_channel                            0 non-null       float64
+ 37  was_missing_prepayment_penalty_mortgage        0 non-null       float64
+ 38  was_missing_product_type                       0 non-null       float64
+ 39  was_missing_property_type                      0 non-null       float64
+ 40  was_missing_loan_purpose                       0 non-null       float64
+ 41  was_missing_seller_name                        0 non-null       float64
+ 42  was_missing_servicer_name                      0 non-null       float64
+ 43  was_missing_super_conforming_flag              0 non-null       float64
+ 44  prepayment_penalty_mortgage_ord_enc            0 non-null       float64
+ 45  product_type_ord_enc                           0 non-null       float64
+ 46  prepayment_penalty_mortgage_enc                0 non-null       float64
+ 47  product_type_enc                               0 non-null       float64
+ 48  was_missing_number_of_units                    0 non-null       float64
+ 49  was_missing_original_unpaid_principal_balance  0 non-null       float64
+dtypes: float64(39), int64(9), object(2)
+memory usage: 68.9+ MB
+None
+|   iter    |  target   | colsam... |    eta    |   gamma   |    l_1    |    l_2    | max_depth | min_ch... |  rounds   | subsample |
+-------------------------------------------------------------------------------------------------------------------------------------
+| [0m1        [0m | [0m0.8399   [0m | [0m0.6763   [0m | [0m0.08726  [0m | [0m0.07589  [0m | [0m0.09016  [0m | [0m0.5924   [0m | [0m10.25    [0m | [0m6.563    [0m | [0m95.52    [0m | [0m0.6339   [0m |
+| [95m2        [0m | [95m0.8422   [0m | [95m0.6445   [0m | [95m0.02439  [0m | [95m0.9436   [0m | [95m0.8918   [0m | [95m0.4881   [0m | [95m6.508    [0m | [95m4.232    [0m | [95m79.95    [0m | [95m0.7808   [0m |
+| [0m3        [0m | [0m0.8382   [0m | [0m0.6691   [0m | [0m0.071    [0m | [0m0.1106   [0m | [0m0.7263   [0m | [0m0.4165   [0m | [0m22.89    [0m | [0m6.208    [0m | [0m21.21    [0m | [0m0.9232   [0m |
+| [0m4        [0m | [0m0.8293   [0m | [0m0.7925   [0m | [0m0.08987  [0m | [0m0.4988   [0m | [0m0.8412   [0m | [0m0.9511   [0m | [0m9.63     [0m | [0m3.725    [0m | [0m10.77    [0m | [0m0.902    [0m |
+| [95m5        [0m | [95m0.8437   [0m | [95m0.668    [0m | [95m0.0361   [0m | [95m0.5805   [0m | [95m0.5796   [0m | [95m0.07798  [0m | [95m17.77    [0m | [95m6.105    [0m | [95m58.77    [0m | [95m0.9213   [0m |
+| [0m6        [0m | [0m0.8307   [0m | [0m0.6309   [0m | [0m0.06558  [0m | [0m0.1079   [0m | [0m0.2869   [0m | [0m0.4672   [0m | [0m3.533    [0m | [0m3.951    [0m | [0m68.47    [0m | [0m0.9472   [0m |
+| [0m7        [0m | [0m0.8424   [0m | [0m0.8344   [0m | [0m0.04569  [0m | [0m0.226    [0m | [0m0.2154   [0m | [0m0.2267   [0m | [0m11.83    [0m | [0m6.583    [0m | [0m59.82    [0m | [0m0.6167   [0m |
+| [95m8        [0m | [95m0.8445   [0m | [95m0.6674   [0m | [95m0.0816   [0m | [95m0.781    [0m | [95m0.6616   [0m | [95m0.3205   [0m | [95m9.057    [0m | [95m5.687    [0m | [95m80.96    [0m | [95m0.8061   [0m |
+| [0m9        [0m | [0m0.8363   [0m | [0m0.9318   [0m | [0m0.09331  [0m | [0m0.5004   [0m | [0m0.7481   [0m | [0m0.6432   [0m | [0m20.63    [0m | [0m3.667    [0m | [0m94.71    [0m | [0m0.6206   [0m |
+| [0m10       [0m | [0m0.8289   [0m | [0m0.604    [0m | [0m0.04753  [0m | [0m0.8117   [0m | [0m0.02761  [0m | [0m0.9375   [0m | [0m13.16    [0m | [0m6.124    [0m | [0m12.87    [0m | [0m0.8087   [0m |
+| [0m11       [0m | [0m0.8442   [0m | [0m0.7419   [0m | [0m0.04938  [0m | [0m0.6422   [0m | [0m0.01605  [0m | [0m0.9909   [0m | [0m13.54    [0m | [0m5.525    [0m | [0m79.58    [0m | [0m0.7601   [0m |
+| [0m12       [0m | [0m0.8391   [0m | [0m0.7063   [0m | [0m0.03252  [0m | [0m0.1734   [0m | [0m0.8662   [0m | [0m0.883    [0m | [0m15.88    [0m | [0m5.971    [0m | [0m40.7     [0m | [0m0.6057   [0m |
+| [0m13       [0m | [0m0.8417   [0m | [0m0.6001   [0m | [0m0.06694  [0m | [0m0.6684   [0m | [0m0.5303   [0m | [0m0.2866   [0m | [0m15.95    [0m | [0m5.481    [0m | [0m53.57    [0m | [0m0.6554   [0m |
+| [0m14       [0m | [0m0.844    [0m | [0m0.7807   [0m | [0m0.06718  [0m | [0m0.1307   [0m | [0m0.6482   [0m | [0m0.8221   [0m | [0m6.434    [0m | [0m5.293    [0m | [0m72.48    [0m | [0m0.766    [0m |
+| [0m15       [0m | [0m0.831    [0m | [0m0.9617   [0m | [0m0.03029  [0m | [0m0.05958  [0m | [0m0.9715   [0m | [0m0.8255   [0m | [0m19.79    [0m | [0m4.822    [0m | [0m30.86    [0m | [0m0.7299   [0m |
+| [0m16       [0m | [0m0.8409   [0m | [0m0.9323   [0m | [0m0.08953  [0m | [0m0.1548   [0m | [0m0.7012   [0m | [0m0.9768   [0m | [0m6.553    [0m | [0m3.014    [0m | [0m58.09    [0m | [0m0.6742   [0m |
+| [0m17       [0m | [0m0.8268   [0m | [0m0.6622   [0m | [0m0.01997  [0m | [0m0.3212   [0m | [0m0.1296   [0m | [0m0.6707   [0m | [0m14.43    [0m | [0m5.031    [0m | [0m11.65    [0m | [0m0.6005   [0m |
+| [0m18       [0m | [0m0.8377   [0m | [0m0.9804   [0m | [0m0.05382  [0m | [0m0.5172   [0m | [0m0.3519   [0m | [0m0.9768   [0m | [0m9.589    [0m | [0m4.158    [0m | [0m56.43    [0m | [0m0.7883   [0m |
+| [0m19       [0m | [0m0.8364   [0m | [0m0.9751   [0m | [0m0.02494  [0m | [0m0.285    [0m | [0m0.04457  [0m | [0m0.277    [0m | [0m11.82    [0m | [0m3.655    [0m | [0m94.38    [0m | [0m0.9421   [0m |
+| [0m20       [0m | [0m0.8164   [0m | [0m0.9072   [0m | [0m0.01081  [0m | [0m0.2152   [0m | [0m0.8116   [0m | [0m0.9369   [0m | [0m7.964    [0m | [0m6.212    [0m | [0m4.176    [0m | [0m0.6183   [0m |
+| [95m21       [0m | [95m0.8458   [0m | [95m0.6368   [0m | [95m0.04871  [0m | [95m0.5529   [0m | [95m0.3119   [0m | [95m0.6479   [0m | [95m7.064    [0m | [95m4.883    [0m | [95m70.76    [0m | [95m0.8396   [0m |
+| [0m22       [0m | [0m0.828    [0m | [0m0.9056   [0m | [0m0.03529  [0m | [0m0.08901  [0m | [0m0.5808   [0m | [0m0.07392  [0m | [0m15.7     [0m | [0m6.523    [0m | [0m12.66    [0m | [0m0.6033   [0m |
+| [0m23       [0m | [0m0.8427   [0m | [0m0.8211   [0m | [0m0.04964  [0m | [0m0.3775   [0m | [0m0.2967   [0m | [0m0.6053   [0m | [0m16.22    [0m | [0m4.947    [0m | [0m72.15    [0m | [0m0.6385   [0m |
+| [0m24       [0m | [0m0.8172   [0m | [0m0.6261   [0m | [0m0.07919  [0m | [0m0.09088  [0m | [0m0.2751   [0m | [0m0.8125   [0m | [0m14.84    [0m | [0m4.97     [0m | [0m5.707    [0m | [0m0.9797   [0m |
+| [0m25       [0m | [0m0.8313   [0m | [0m0.8743   [0m | [0m0.05367  [0m | [0m0.4232   [0m | [0m0.8195   [0m | [0m0.9575   [0m | [0m24.19    [0m | [0m4.332    [0m | [0m22.52    [0m | [0m0.6498   [0m |
+| [0m26       [0m | [0m0.8402   [0m | [0m0.9738   [0m | [0m0.05779  [0m | [0m0.2316   [0m | [0m0.06418  [0m | [0m0.9847   [0m | [0m5.149    [0m | [0m5.364    [0m | [0m98.96    [0m | [0m0.7035   [0m |
+| [0m27       [0m | [0m0.8148   [0m | [0m0.6763   [0m | [0m0.06435  [0m | [0m0.1364   [0m | [0m0.7561   [0m | [0m0.3787   [0m | [0m12.99    [0m | [0m5.505    [0m | [0m3.321    [0m | [0m0.9499   [0m |
+| [0m28       [0m | [0m0.8401   [0m | [0m0.8752   [0m | [0m0.09595  [0m | [0m0.1828   [0m | [0m0.5341   [0m | [0m0.2172   [0m | [0m12.99    [0m | [0m5.704    [0m | [0m69.82    [0m | [0m0.9276   [0m |
+| [0m29       [0m | [0m0.8305   [0m | [0m0.6251   [0m | [0m0.0655   [0m | [0m0.373    [0m | [0m0.3122   [0m | [0m0.9563   [0m | [0m4.089    [0m | [0m3.207    [0m | [0m28.56    [0m | [0m0.8023   [0m |
+| [0m30       [0m | [0m0.8376   [0m | [0m0.9255   [0m | [0m0.02333  [0m | [0m0.5826   [0m | [0m0.2491   [0m | [0m0.9222   [0m | [0m8.831    [0m | [0m3.845    [0m | [0m62.81    [0m | [0m0.7558   [0m |
+| [0m31       [0m | [0m0.8336   [0m | [0m0.7763   [0m | [0m0.02412  [0m | [0m0.8854   [0m | [0m0.3283   [0m | [0m0.1741   [0m | [0m14.91    [0m | [0m5.124    [0m | [0m17.52    [0m | [0m0.6868   [0m |
+| [0m32       [0m | [0m0.8401   [0m | [0m0.7675   [0m | [0m0.07788  [0m | [0m0.5563   [0m | [0m0.9251   [0m | [0m0.8299   [0m | [0m20.01    [0m | [0m3.591    [0m | [0m84.44    [0m | [0m0.6781   [0m |
+| [0m33       [0m | [0m0.8392   [0m | [0m0.7495   [0m | [0m0.07775  [0m | [0m0.7302   [0m | [0m0.5148   [0m | [0m0.2474   [0m | [0m20.6     [0m | [0m3.083    [0m | [0m53.98    [0m | [0m0.9465   [0m |
+| [0m34       [0m | [0m0.8432   [0m | [0m0.7965   [0m | [0m0.07602  [0m | [0m0.2358   [0m | [0m0.03105  [0m | [0m0.804    [0m | [0m6.177    [0m | [0m5.679    [0m | [0m56.07    [0m | [0m0.7808   [0m |
+| [0m35       [0m | [0m0.8277   [0m | [0m0.7397   [0m | [0m0.0184   [0m | [0m0.9222   [0m | [0m0.4815   [0m | [0m0.02587  [0m | [0m12.95    [0m | [0m4.419    [0m | [0m8.339    [0m | [0m0.8635   [0m |
+| [0m36       [0m | [0m0.8355   [0m | [0m0.7395   [0m | [0m0.08277  [0m | [0m0.6026   [0m | [0m0.4219   [0m | [0m0.7154   [0m | [0m3.16     [0m | [0m5.541    [0m | [0m83.4     [0m | [0m0.678    [0m |
+| [0m37       [0m | [0m0.8414   [0m | [0m0.6349   [0m | [0m0.03812  [0m | [0m0.8254   [0m | [0m0.361    [0m | [0m0.1769   [0m | [0m22.02    [0m | [0m6.111    [0m | [0m41.97    [0m | [0m0.729    [0m |
+| [0m38       [0m | [0m0.8392   [0m | [0m0.6973   [0m | [0m0.04287  [0m | [0m0.4364   [0m | [0m0.3322   [0m | [0m0.09622  [0m | [0m23.72    [0m | [0m6.598    [0m | [0m25.08    [0m | [0m0.9573   [0m |
+| [0m39       [0m | [0m0.8395   [0m | [0m0.7631   [0m | [0m0.05952  [0m | [0m0.8413   [0m | [0m0.6028   [0m | [0m0.2823   [0m | [0m18.87    [0m | [0m3.673    [0m | [0m35.88    [0m | [0m0.8252   [0m |
+| [0m40       [0m | [0m0.8353   [0m | [0m0.8935   [0m | [0m0.08066  [0m | [0m0.3294   [0m | [0m0.6932   [0m | [0m0.4091   [0m | [0m9.698    [0m | [0m4.266    [0m | [0m25.62    [0m | [0m0.7139   [0m |
+| [0m41       [0m | [0m0.8451   [0m | [0m0.6424   [0m | [0m0.0442   [0m | [0m0.9676   [0m | [0m0.1795   [0m | [0m0.06782  [0m | [0m16.34    [0m | [0m5.688    [0m | [0m80.21    [0m | [0m0.8168   [0m |
+| [0m42       [0m | [0m0.8312   [0m | [0m0.9925   [0m | [0m0.01086  [0m | [0m0.3462   [0m | [0m0.0157   [0m | [0m0.3407   [0m | [0m6.772    [0m | [0m5.6      [0m | [0m39.98    [0m | [0m0.8633   [0m |
+| [0m43       [0m | [0m0.8403   [0m | [0m0.743    [0m | [0m0.0102   [0m | [0m0.4145   [0m | [0m0.2053   [0m | [0m0.8706   [0m | [0m9.863    [0m | [0m3.567    [0m | [0m47.25    [0m | [0m0.9842   [0m |
+| [0m44       [0m | [0m0.844    [0m | [0m0.8122   [0m | [0m0.08444  [0m | [0m0.2182   [0m | [0m0.7496   [0m | [0m0.9927   [0m | [0m10.26    [0m | [0m5.663    [0m | [0m80.5     [0m | [0m0.9579   [0m |
+| [0m45       [0m | [0m0.8446   [0m | [0m0.718    [0m | [0m0.03153  [0m | [0m0.3035   [0m | [0m0.981    [0m | [0m0.01458  [0m | [0m17.61    [0m | [0m5.997    [0m | [0m92.37    [0m | [0m0.6271   [0m |
+| [0m46       [0m | [0m0.8403   [0m | [0m0.6647   [0m | [0m0.05016  [0m | [0m0.5655   [0m | [0m0.05331  [0m | [0m0.9646   [0m | [0m24.31    [0m | [0m4.687    [0m | [0m41.86    [0m | [0m0.6143   [0m |
+| [0m47       [0m | [0m0.842    [0m | [0m0.883    [0m | [0m0.05148  [0m | [0m0.1821   [0m | [0m0.7506   [0m | [0m0.5102   [0m | [0m14.99    [0m | [0m6.34     [0m | [0m91.96    [0m | [0m0.6232   [0m |
+| [0m48       [0m | [0m0.8368   [0m | [0m0.9343   [0m | [0m0.07533  [0m | [0m0.6019   [0m | [0m0.5163   [0m | [0m0.3757   [0m | [0m18.24    [0m | [0m6.788    [0m | [0m98.1     [0m | [0m0.9968   [0m |
+| [0m49       [0m | [0m0.8357   [0m | [0m0.9073   [0m | [0m0.02806  [0m | [0m0.5152   [0m | [0m0.8801   [0m | [0m0.3177   [0m | [0m15.74    [0m | [0m6.714    [0m | [0m48.24    [0m | [0m0.9337   [0m |
+| [0m50       [0m | [0m0.8427   [0m | [0m0.6428   [0m | [0m0.08595  [0m | [0m0.5625   [0m | [0m0.9485   [0m | [0m0.432    [0m | [0m7.58     [0m | [0m3.195    [0m | [0m52.72    [0m | [0m0.6409   [0m |
+| [0m51       [0m | [0m0.8433   [0m | [0m0.6449   [0m | [0m0.06902  [0m | [0m0.2522   [0m | [0m0.7619   [0m | [0m0.4135   [0m | [0m24.4     [0m | [0m6.839    [0m | [0m75.29    [0m | [0m0.6138   [0m |
+| [0m52       [0m | [0m0.8418   [0m | [0m0.6      [0m | [0m0.01     [0m | [0m1.0      [0m | [0m0.0      [0m | [0m0.01     [0m | [0m10.23    [0m | [0m3.0      [0m | [0m74.23    [0m | [0m0.6      [0m |
+| [0m53       [0m | [0m0.8417   [0m | [0m0.6      [0m | [0m0.01     [0m | [0m1.0      [0m | [0m0.0      [0m | [0m1.0      [0m | [0m24.25    [0m | [0m7.0      [0m | [0m66.55    [0m | [0m0.6      [0m |
+| [0m54       [0m | [0m0.8182   [0m | [0m0.8905   [0m | [0m0.04423  [0m | [0m0.532    [0m | [0m0.5274   [0m | [0m0.2826   [0m | [0m3.052    [0m | [0m4.741    [0m | [0m51.14    [0m | [0m0.7556   [0m |
+| [0m55       [0m | [0m0.8371   [0m | [0m0.9506   [0m | [0m0.08815  [0m | [0m0.9876   [0m | [0m0.8846   [0m | [0m0.4781   [0m | [0m20.33    [0m | [0m3.047    [0m | [0m76.89    [0m | [0m0.7      [0m |
+=====================================================================================================================================
+[0]	val-auc:0.81936
+[1]	val-auc:0.81131
+[2]	val-auc:0.82757
+[3]	val-auc:0.83339
+[4]	val-auc:0.83385
+[5]	val-auc:0.83621
+[6]	val-auc:0.84517
+[7]	val-auc:0.84381
+[8]	val-auc:0.84104
+[9]	val-auc:0.84200
+[10]	val-auc:0.84265
+[11]	val-auc:0.84405
+[12]	val-auc:0.84395
+[13]	val-auc:0.84420
+[14]	val-auc:0.84385
+[15]	val-auc:0.84410
+[16]	val-auc:0.84382
+[17]	val-auc:0.84527
+[18]	val-auc:0.84557
+[19]	val-auc:0.84575
+[20]	val-auc:0.84622
+[21]	val-auc:0.84730
+[22]	val-auc:0.84709
+[23]	val-auc:0.84663
+[24]	val-auc:0.84682
+[25]	val-auc:0.84767
+[26]	val-auc:0.84808
+[27]	val-auc:0.84920
+[28]	val-auc:0.84960
+[29]	val-auc:0.84940
+[30]	val-auc:0.84902
+[31]	val-auc:0.84896
+[32]	val-auc:0.84857
+[33]	val-auc:0.84847
+[34]	val-auc:0.84857
+[35]	val-auc:0.84861
+[36]	val-auc:0.84802
+[37]	val-auc:0.84838
+[38]	val-auc:0.84830
+[39]	val-auc:0.84817
+[40]	val-auc:0.84749
+[41]	val-auc:0.84748
+[42]	val-auc:0.84719
+[43]	val-auc:0.84706
+[44]	val-auc:0.84659
+[45]	val-auc:0.84672
+[46]	val-auc:0.84582
+[47]	val-auc:0.84568
+[48]	val-auc:0.84637
+[49]	val-auc:0.84622
+[50]	val-auc:0.84587
+[51]	val-auc:0.84581
+[52]	val-auc:0.84560
+[53]	val-auc:0.84537
+[54]	val-auc:0.84550
+[55]	val-auc:0.84529
+[56]	val-auc:0.84563
+[57]	val-auc:0.84563
+[58]	val-auc:0.84592
+[59]	val-auc:0.84593
+[60]	val-auc:0.84622
+[61]	val-auc:0.84643
+[62]	val-auc:0.84670
+[63]	val-auc:0.84677
+[64]	val-auc:0.84704
+[65]	val-auc:0.84723
+[66]	val-auc:0.84723
+[67]	val-auc:0.84707
+[68]	val-auc:0.84701
+[69]	val-auc:0.84684
+Filename: /home/e1chin/private/RiskNet/src/risknet/run/pipeline.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+     4     35.2 MiB     35.2 MiB           1   @profile
+     5                                         def main():
+     6                                             '''
+     7                                             This is where everything runs!
+     8                                             We call various functions from .model, .reducer, .encoder, etc. step-by-step to run the pipeline.
+     9                                             Check out the comments to see what each part of the code does.
+    10                                             '''
+    11                                         
+    12                                             #Global Imports:
+    13     90.7 MiB     55.5 MiB           1       import pandas as pd
+    14     90.7 MiB      0.0 MiB           1       from pandas import DataFrame
+    15                                         
+    16     90.7 MiB      0.0 MiB           1       import numpy as np
+    17                                         
+    18     90.7 MiB      0.0 MiB           1       from typing import List, Dict, Tuple
+    19     90.7 MiB      0.0 MiB           1       import pickle
+    20                                         
+    21     90.7 MiB      0.0 MiB           1       import logging
+    22     91.3 MiB      0.6 MiB           1       import yaml
+    23     91.3 MiB      0.0 MiB           1       import os 
+    24     91.3 MiB      0.0 MiB           1       logger = logging.getLogger("freelunch")
+    25                                         
+    26                                             #This ensures the info-level logs get stored in a new file called "test.log"
+    27     91.3 MiB      0.0 MiB           2       logging.basicConfig(
+    28     91.3 MiB      0.0 MiB           1           filename="test.log",
+    29     91.3 MiB      0.0 MiB           1           level=logging.INFO,
+    30     91.3 MiB      0.0 MiB           1           format="%(asctime)s:%(levelname)s:%(message)s"
+    31                                                 )
+    32                                         
+    33     91.3 MiB      0.0 MiB           1       import sys
+    34                                         
+    35                                             #User-Defined Imports:
+    36     91.3 MiB      0.0 MiB           1       risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
+    37     91.3 MiB      0.0 MiB           1       sys.path.append(risknet_run_path)
+    38                                         
+    39    152.0 MiB     60.7 MiB           1       from risknet.run import model
+    40                                             #sys.path.append(r"src/risknet/run")
+    41                                         
+    42                                             #Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
+    43    152.0 MiB      0.0 MiB           1       risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
+    44    152.0 MiB      0.0 MiB           1       sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
+    45    200.6 MiB     48.6 MiB           1       from risknet.proc import label_prep
+    46    204.3 MiB      3.7 MiB           1       from risknet.proc import reducer
+    47    204.3 MiB      0.0 MiB           1       from risknet.proc import encoder
+    48    215.1 MiB     10.8 MiB           1       from risknet.proc import fe
+    49    215.1 MiB      0.0 MiB           1       from risknet.sys import cpu_monitor
+    50                                         
+    51    215.1 MiB      0.0 MiB           1       config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf_template.yaml')
+    52    215.1 MiB      0.0 MiB           1       with open(config_path) as conf:
+    53    215.1 MiB      0.0 MiB           1           config = yaml.full_load(conf)
+    54                                         
+    55                                             #Get information on system baselines:
+    56    215.1 MiB      0.0 MiB           1       logger.info("System baseline: ")
+    57    215.1 MiB      0.0 MiB           1       logger.info(cpu_monitor.baseline())
+    58                                         
+    59                                             #Variables:
+    60    215.1 MiB      0.0 MiB           1       fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data files
+    61    215.1 MiB      0.0 MiB           1       data: List[Tuple[str, str, str]] = config['data']['files']
+    62    215.1 MiB      0.0 MiB           1       cat_label: str = "default"
+    63    215.1 MiB      0.0 MiB           1       non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
+    64                                             #('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
+    65                                         
+    66                                             #Start: set CPU to zero
+    67    215.1 MiB      0.0 MiB           1       cpu_monitor.cpu_check()
+    68                                         
+    69                                             #Pipeline:
+    70                                             #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
+    71                                             #label_prep.label_proc(fm_root, data)
+    72   2665.4 MiB   2450.3 MiB           1       label_prep.execute(fm_root)
+    73                                         
+    74                                             #Step 2: Reducer: Returns df of combined data to encode
+    75   2681.3 MiB     15.9 MiB           1       df = reducer.reduce(fm_root, data[0]) 
+    76                                             #As of right now, we are only pulling 2009 data. So we only need data[0].
+    77                                         
+    78                                             #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
+    79                                             #and uncomment this code:
+    80                                             #df = reducer.reduce(fm_root, data[1])
+    81   2681.3 MiB      0.0 MiB           1       logger.info("CPU usage after pulling/combining data: " + str(cpu_monitor.cpu_check()))
+    82                                         
+    83                                             #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
+    84                                         
+    85                                             #Define datatypes
+    86   2692.2 MiB     10.9 MiB           1       df = encoder.datatype(df)
+    87                                         
+    88                                             #Define where it should be null:
+    89                                             #where we have explicit mappings of nulls
+    90   2692.4 MiB      0.2 MiB           1       df = encoder.num_null(df)
+    91                                         
+    92                                             # where we have explicit mappings of nulls
+    93   2692.4 MiB      0.0 MiB           1       df = encoder.cat_null(df)
+    94                                         
+    95                                             #Data Cleaning 2: Categorical, Ordinal, and RME Encoding
+    96                                             # interaction effects
+    97   2692.5 MiB      0.1 MiB           1       df['seller_servicer_match'] = np.where(df.seller_name == df.servicer_name, 1, 0)
+    98                                         
+    99                                             '''Categorical Encoding'''
+   100   2692.5 MiB      0.0 MiB           1       df = encoder.cat_enc(df)
+   101                                         
+   102                                             '''Ordinal Encoding'''
+   103   2692.6 MiB      0.1 MiB           1       df = encoder.ord_enc(df, fm_root)
+   104                                         
+   105                                             '''RME Encoding'''
+   106   2682.1 MiB    -10.4 MiB           1       df = encoder.rme(df, fm_root)
+   107                                         
+   108                                             #Data Cleaning 3: Remove badvars, scale
+   109                                             #Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
+   110                                             #df = encoder.ff(df, fm_root) #Removes bad variables
+   111                                         
+   112                                             #Scale the df
+   113   2682.2 MiB      0.1 MiB           1       df = encoder.scale(df, fm_root)
+   114                                             #This puts the complete scaled/cleaned dataframe into df.pkl located in fm_root
+   115                                         
+   116   2682.2 MiB      0.0 MiB           1       logger.info("CPU usage after data cleaning: " + str(cpu_monitor.cpu_check()))
+   117                                         
+   118                                             #Feature Engineering
+   119                                             #df = fe.fe(df, fm_root)
+   120   2675.9 MiB     -6.3 MiB           1       df = fe.fe(df, fm_root)
+   121                                             #fe = pd.read_pickle(fm_root + 'combo.pkl')
+   122                                             #print(fe.info(verbose=True))
+   123                                         
+   124   2675.9 MiB      0.0 MiB           1       logger.info("CPU usage after feature engineering: " + str(cpu_monitor.cpu_check()))
+   125                                         
+   126                                             #Training the XGB Model
+   127   2723.7 MiB     47.8 MiB           1       data = model.xgb_train(df, fm_root, baseline=False)
+   128   2723.7 MiB      0.0 MiB           1       auc, pr, recall = model.xgb_eval(data)
+   129                                         
+   130   2723.7 MiB      0.0 MiB           1       logger.info("Train, val, test recall: " + str(auc))
+   131   2723.7 MiB      0.0 MiB           1       logger.info("Train, val, test precision: " + str(pr))
+   132   2723.7 MiB      0.0 MiB           1       logger.info("Train, val, test recall: " + str(recall))
+
+
