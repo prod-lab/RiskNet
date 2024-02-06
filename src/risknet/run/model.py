@@ -8,6 +8,8 @@ import xgboost as xgb
 from bayes_opt import BayesianOptimization
 import logging
 from xgboost.core import Booster
+import os
+import sys
 
 import pandas as pd
 from typing import List, Dict, Tuple
@@ -15,6 +17,11 @@ import pickle
 
 from sklearn.metrics import precision_score, recall_score, f1_score, precision_recall_curve, roc_curve, roc_auc_score, auc, average_precision_score, mean_absolute_error
 import matplotlib.pyplot as plt
+
+#Local imports
+risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
+sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
+from risknet.sys import cpu_monitor
 
 #Variables
 logger = logging.getLogger("freelunch")
@@ -81,6 +88,8 @@ class XGBCVTrain(object):
                    metrics=objective,
                    maximize=maximize)['test-' + objective[0] + '-mean'].mean()
 
+            logger.info("CPU usage after cross-validation: " + str(cpu_monitor.cpu_check()))
+
             if maximize:
                 return test_metric
             else:
@@ -103,6 +112,7 @@ class XGBCVTrain(object):
         #In this case, n_iter = # of steps of bayesian optimization to perform
         xgb_bo.maximize(init_points=bayes_n_init, n_iter=bayes_n_iter)
         #This is what generates iter | target | x | etc.
+        logger.info("CPU usage after maximizing hyperparams: " + str(cpu_monitor.cpu_check()))
 
         #These are the best parameters according to logger
         logger.info("Best/max parameters are:")
@@ -124,7 +134,8 @@ class XGBCVTrain(object):
 
         self.bst = xgb.train(param, dtrain, num_boost_round=int(xgb_bo.max['params']['rounds']), evals =[(dval, 'val')],
                              maximize=maximize, verbose_eval=True) #.train returns a Booster object
-
+        
+        logger.info("CPU usage after training model: " + str(cpu_monitor.cpu_check()))
 
         logger.info("Importance: ")
 

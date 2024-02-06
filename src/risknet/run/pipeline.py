@@ -21,7 +21,7 @@ logger = logging.getLogger("freelunch")
 #This ensures the info-level logs get stored in a new file called "test.log"
 logging.basicConfig(
     filename="test.log",
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s:%(levelname)s:%(message)s"
     )
 
@@ -41,10 +41,15 @@ from risknet.proc import label_prep
 from risknet.proc import reducer
 from risknet.proc import encoder
 from risknet.proc import fe
+from risknet.sys import cpu_monitor
 
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf.yaml')
 with open(config_path) as conf:
     config = yaml.full_load(conf)
+
+#Get information on system baselines:
+logger.info("System baseline: ")
+logger.info(cpu_monitor.baseline())
 
 #Variables:
 fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data files
@@ -53,8 +58,10 @@ cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 #('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
 
-#Pipeline:
+#Start: set CPU to zero
+cpu_monitor.cpu_check()
 
+#Pipeline:
 #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
 #label_prep.label_proc(fm_root, data)
 label_prep.execute(fm_root)
@@ -66,6 +73,7 @@ df = reducer.reduce(fm_root, data[0])
 #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
 #and uncomment this code:
 #df = reducer.reduce(fm_root, data[1])
+logger.info("CPU usage after pulling/combining data: " + str(cpu_monitor.cpu_check()))
 
 #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
 
@@ -100,11 +108,15 @@ df = encoder.rme(df, fm_root)
 df = encoder.scale(df, fm_root)
 #This puts the complete scaled/cleaned dataframe into df.pkl located in fm_root
 
+logger.info("CPU usage after data cleaning: " + str(cpu_monitor.cpu_check()))
+
 #Feature Engineering
 #df = fe.fe(df, fm_root)
 df = fe.fe(df, fm_root)
 #fe = pd.read_pickle(fm_root + 'combo.pkl')
 #print(fe.info(verbose=True))
+
+logger.info("CPU usage after feature engineering: " + str(cpu_monitor.cpu_check()))
 
 #Training the XGB Model
 data = model.xgb_train(df, fm_root, baseline=False)
