@@ -50,18 +50,18 @@ def num_null(df):
     tasks = [process_column.remote(df[column], column, value) for column, value in numerical_null_map.items()]
     # Ray get to process tasks 
     results = ray.get(tasks)
-    print('result')
-    print(result)
+    #print('result')
+    #print(results)
     #Create df
     for result in results:
         df[result[0]] = result[1] 
     return df
-# def num_null(df):
-#     numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
-#                             'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}
-#     for k,v in numerical_null_map.items():
+#def num_null(df):
+ #    numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
+    #                         'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}
+  #   for k,v in numerical_null_map.items():
 #         df[k] = np.where(df[k] == v, np.nan, df[k])
-#     return df
+   #  return df
 '''
 cat_null: defines null values for categorical columns
 input:
@@ -69,9 +69,17 @@ input:
 '''
 def cat_null(df):
     categorical_null_map: Dict [str,str] = {'first_time_homebuyer':'9', 'occupancy_status': '9', 'channel':'9', 'property_type':'99', 'loan_purpose':'9'}
-    for k,v in categorical_null_map.items():
-        df[k] = np.where(df[k] == v, np.nan, df[k])
+
+    tasks = [process_column.remote(df[column],column,value) for column,value in categorical_null_map.items()]
+    results = ray.get(tasks)
+    for result in results:
+        df[result[0]] = result[1]
     return df
+#def cat_null(df):
+#    categorical_null_map: Dict [str,str] = {'first_time_homebuyer':'9', 'occupancy_status': '9', 'channel':'9', 'property_type':'99', 'loan_purpose':'9'}
+#    for k,v in categorical_null_map.items():
+#        df[k] = np.where(df[k] == v, np.nan, df[k])
+#    return df
 
 '''
 cat_enc: creates "was_missing" columns for each categorical giving binary 0/1 missing/present; also replaces NA with missing in categorical cols
