@@ -1,4 +1,5 @@
-Welcome to Risknet! This is a downloadable Pip package where you can access and run an XGBoost pipeline.
+# Welcome to RiskNet!
+This is a downloadable Pip package where you can access and run an XGBoost pipeline.
 
 To access the Risknet package, you can download it by running `pip install risknet`. You can find documentation here: https://pypi.org/project/risknet/1.0.17/
 To access the Risknet code, fork the code from the Git repo.
@@ -127,3 +128,8 @@ But Running `>>> import risknet.utils.label_prep as label_prep, >>> label_prep.l
 0.0.16: try compiling on base environment (python 3.12, pip 23.2)
 
 1.0.17: Uploading to PyPi as risknet! SUCCESS!! :D"
+
+# Running RiskNet with Docker
+For users who prefer Docker, we provide a Docker image of RiskNet that encapsulates all dependencies and offers a straightforward way to run the pipeline.
+Docker User Guide
+For detailed instructions on using the Docker image, including configuration options and advanced usage, refer to our comprehensive Docker User Guide available [here](https://docs.google.com/document/d/1bzSW1dIQg1xbr0qvtNB7DhVBaFcTQRXwFjURhHDCV0o/edit?usp=sharing).
