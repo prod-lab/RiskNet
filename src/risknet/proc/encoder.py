@@ -7,12 +7,15 @@ from typing import List, Dict
 from pandas import DataFrame
 import warnings
 import pickle
+import ray
 #import dask.dataframe as dd #use dask in place of pandas
 
 
 #User-Defined Imports
 from risknet.proc import reducer
 
+#initialize ray 
+ray.init()
 #Global Variables:
 numericals: List[str] = ['credit_score', 'number_of_units', 'orig_combined_loan_to_value', 'dti_ratio', 'original_unpaid_principal_balance', 'original_ltv', 'number_of_borrowers']
 categoricals: List[str] = ['first_time_homebuyer', 'occupancy_status', 'channel', 'prepayment_penalty_mortgage', 'product_type', 'property_type', 'loan_purpose', 'seller_name', 'servicer_name', 'super_conforming_flag']
@@ -30,18 +33,35 @@ def datatype(df):
     df.loc[:, categoricals] = df.loc[:, categoricals].astype(str)
     return df
 
+@ray.remote
+def process_column(col, name, value):
+    print('processing column',name)
+    col = np.where(col == value, np.nan, col)
+    return (name,col)
+
 '''
 num_null: defines null values for numerical columns
 input:
 - df (DataFrame): passed in after Reducer
 '''
 def num_null(df):
-    numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
-                            'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}
-    for k,v in numerical_null_map.items():
-        df[k] = np.where(df[k] == v, np.nan, df[k])
+    numerical_null_map: Dict[str, int] = {'credit_score': 9999, 'number_of_units': 99, 'orig_combined_loan_to_value': 999,
+                                          'dti_ratio': 999, 'original_ltv': 999, 'number_of_borrowers': 99}
+    tasks = [process_column.remote(df[column], column, value) for column, value in numerical_null_map.items()]
+    # Ray get to process tasks 
+    results = ray.get(tasks)
+    print('result')
+    print(result)
+    #Create df
+    for result in results:
+        df[result[0]] = result[1] 
     return df
-
+# def num_null(df):
+#     numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
+#                             'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}
+#     for k,v in numerical_null_map.items():
+#         df[k] = np.where(df[k] == v, np.nan, df[k])
+#     return df
 '''
 cat_null: defines null values for categorical columns
 input:
