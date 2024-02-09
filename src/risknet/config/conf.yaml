@@ -5,6 +5,7 @@ general:
   gcp_dask_workers: 4
 data:
   titanic_root: gs://albell-test/
+  #change to local path
   fm_root : src/risknet/data/
   files:
     - !!python/tuple ['monthly.parquet', 'dev_labels.parquet', 'dev_reg_labels.parquet']

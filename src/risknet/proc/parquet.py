@@ -4,6 +4,7 @@ import dask.dataframe as dd
 import dask.array as da
 
 def parquet_convert(data1, data2):
+    #change fm_root with local path
     fm_root = "src/risknet/data/"
     monthly = dd.read_csv(fm_root+data1, sep='|', header = None,dtype={23: 'object',
            24: 'object',
@@ -43,7 +44,7 @@ def parquet_convert(data1, data2):
                                            "original_loan_term",
                                            "number_of_borrowers", "seller_name", "servicer_name", "super_conforming_flag"]
     org['row_hash'] = org.assign(partition_count=50).partition_count.cumsum() % 50
-
+#change path with storage path
     org.to_parquet("src/risknet/data/" + '/org.parquet', partition_on = "row_hash")
 
 #parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
