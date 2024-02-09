@@ -13,7 +13,6 @@ import pickle
 #User-Defined Imports
 from risknet.proc import reducer
 
-
 #Global Variables:
 numericals: List[str] = ['credit_score', 'number_of_units', 'orig_combined_loan_to_value', 'dti_ratio', 'original_unpaid_principal_balance', 'original_ltv', 'number_of_borrowers']
 categoricals: List[str] = ['first_time_homebuyer', 'occupancy_status', 'channel', 'prepayment_penalty_mortgage', 'product_type', 'property_type', 'loan_purpose', 'seller_name', 'servicer_name', 'super_conforming_flag']

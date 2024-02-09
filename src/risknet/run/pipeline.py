@@ -7,21 +7,15 @@ Check out the comments to see what each part of the code does.
 #Global Imports:
 import pandas as pd
 from pandas import DataFrame
+
 import numpy as np
-import sys
+
 from typing import List, Dict, Tuple
 import pickle
+
 import logging
 import yaml
-import os
-
-from risknet.proc import label_prep
-from risknet.proc import reducer
-from risknet.proc import encoder
-from risknet.proc import parquet
-from risknet.proc import fe
-from risknet.run import model
-
+import os 
 logger = logging.getLogger("freelunch")
 
 #This ensures the info-level logs get stored in a new file called "test.log"
@@ -31,14 +25,22 @@ logging.basicConfig(
     format="%(asctime)s:%(levelname)s:%(message)s"
     )
 
-#load data
-# parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
+import sys
 
+#User-Defined Imports:
 risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
 sys.path.append(risknet_run_path)
 
+from risknet.run import model
+#sys.path.append(r"src/risknet/run")
+
+#Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
 risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
 sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
+from risknet.proc import label_prep
+from risknet.proc import reducer
+from risknet.proc import encoder
+from risknet.proc import fe
 
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf.yaml')
 with open(config_path) as conf:
@@ -49,16 +51,13 @@ fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data fi
 data: List[Tuple[str, str, str]] = config['data']['files']
 cat_label: str = "default"
 non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
-
-
-#Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
-#sys.path.append(r"src/risknet/proc") #reorient directory to access proc .py files
+#('historical_data_time_2014Q1.txt', 'oot_labels.pkl', 'oot_reg_labels.pkl')]
 
 #Pipeline:
 
 #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
-label_prep.label_proc(fm_root, data)
-
+#label_prep.label_proc(fm_root, data)
+label_prep.execute(fm_root)
 
 #Step 2: Reducer: Returns df of combined data to encode
 df = reducer.reduce(fm_root, data[0]) 
@@ -95,10 +94,11 @@ df = encoder.rme(df, fm_root)
 
 #Data Cleaning 3: Remove badvars, scale
 #Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
-df = encoder.ff(df, fm_root) #Removes bad variables
+#df = encoder.ff(df, fm_root) #Removes bad variables
 
 #Scale the df
 df = encoder.scale(df, fm_root)
+#This puts the complete scaled/cleaned dataframe into df.pkl located in fm_root
 
 #Feature Engineering
 #df = fe.fe(df, fm_root)
@@ -113,3 +113,6 @@ auc, pr, recall = model.xgb_eval(data)
 print(auc)
 print(pr)
 print(recall)
+
+
+    
