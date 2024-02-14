@@ -1,3 +1,4 @@
+
 '''
 This is where everything runs!
 We call various functions from .model, .reducer, .encoder, etc. step-by-step to run the pipeline.
@@ -22,94 +23,91 @@ from risknet.proc import parquet
 from risknet.proc import fe
 from risknet.run import model
 
-logger = logging.getLogger("freelunch")
+def pipeline(fe_enabled=True, baseline=True):
+    logger = logging.getLogger("freelunch")
 
-#This ensures the info-level logs get stored in a new file called "test.log"
-logging.basicConfig(
-    filename="test.log",
-    level=logging.DEBUG,
-    format="%(asctime)s:%(levelname)s:%(message)s"
-    )
+    #This ensures the info-level logs get stored in a new file called "test.log"
+    logging.basicConfig(
+        filename="test.log",
+        level=logging.DEBUG,
+        format="%(asctime)s:%(levelname)s:%(message)s"
+        )
 
-#load data
-# parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
+    #load data
+    # parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
 
-risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
-sys.path.append(risknet_run_path)
+    risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
+    sys.path.append(risknet_run_path)
 
-risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
-sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
+    risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
+    sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
 
-config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf.yaml')
-with open(config_path) as conf:
-    config = yaml.full_load(conf)
+    config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf.yaml')
+    with open(config_path) as conf:
+        config = yaml.full_load(conf)
 
-#Variables:
-fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data files
-data: List[Tuple[str, str, str]] = config['data']['files']
-cat_label: str = "default"
-non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
-
-
-#Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
-#sys.path.append(r"src/risknet/proc") #reorient directory to access proc .py files
-
-#Pipeline:
-
-#Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
-label_prep.label_proc(fm_root, data)
+    #Variables:
+    fm_root = os.path.expanduser(config['data']['fm_root'])  #location of FM data files
+    data: List[Tuple[str, str, str]] = config['data']['files']
+    cat_label: str = "default"
+    non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag']
 
 
-#Step 2: Reducer: Returns df of combined data to encode
-df = reducer.reduce(fm_root, data[0]) 
-#As of right now, we are only pulling 2009 data. So we only need data[0].
+    #Note: for some reason risknet.proc.[package_name] didn't work so I'm updating this yall :D
+    #sys.path.append(r"src/risknet/proc") #reorient directory to access proc .py files
 
-#However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
-#and uncomment this code:
-#df = reducer.reduce(fm_root, data[1])
+    #Pipeline:
 
-#Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
+    #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
+    label_prep.label_proc(fm_root, data)
 
- #Define datatypes
-df = encoder.datatype(df)
 
-#Define where it should be null:
-#where we have explicit mappings of nulls
-df = encoder.num_null(df)
+    #Step 2: Reducer: Returns df of combined data to encode
+    df = reducer.reduce(fm_root, data[0]) 
+    #As of right now, we are only pulling 2009 data. So we only need data[0].
 
-# where we have explicit mappings of nulls
-df = encoder.cat_null(df)
+    #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
+    #and uncomment this code:
+    #df = reducer.reduce(fm_root, data[1])
 
-#Data Cleaning 2: Categorical, Ordinal, and RME Encoding
-# interaction effects
-df['seller_servicer_match'] = np.where(df.seller_name == df.servicer_name, 1, 0)
+    #Data Cleaning 1: Define datatypes; Define what should be null (e.g., which codes per column indicate missing data)
 
-'''Categorical Encoding'''
-df = encoder.cat_enc(df)
+    #Define datatypes
+    df = encoder.datatype(df)
 
-'''Ordinal Encoding'''
-df = encoder.ord_enc(df, fm_root)
+    #Define where it should be null:
+    #where we have explicit mappings of nulls
+    df = encoder.num_null(df)
 
-'''RME Encoding'''
-df = encoder.rme(df, fm_root)
+    # where we have explicit mappings of nulls
+    df = encoder.cat_null(df)
 
-#Data Cleaning 3: Remove badvars, scale
-#Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
-df = encoder.ff(df, fm_root) #Removes bad variables
+    #Data Cleaning 2: Categorical, Ordinal, and RME Encoding
+    # interaction effects
+    df['seller_servicer_match'] = np.where(df.seller_name == df.servicer_name, 1, 0)
 
-#Scale the df
-df = encoder.scale(df, fm_root)
+    '''Categorical Encoding'''
+    df = encoder.cat_enc(df)
 
-#Feature Engineering
-#df = fe.fe(df, fm_root)
-df = fe.fe(df, fm_root)
-#fe = pd.read_pickle(fm_root + 'combo.pkl')
-#print(fe.info(verbose=True))
+    '''Ordinal Encoding'''
+    df = encoder.ord_enc(df, fm_root)
 
-#Training the XGB Model
-data = model.xgb_train(df, fm_root, baseline=False)
-auc, pr, recall = model.xgb_eval(data)
+    '''RME Encoding'''
+    df = encoder.rme(df, fm_root)
 
-print(auc)
-print(pr)
-print(recall)
+    #Data Cleaning 3: Remove badvars, scale
+    #Remove badvars (Feature filter). Save badvars into badvars.pkl, and goodvars (unscaled data) into
+    df = encoder.ff(df, fm_root) #Removes bad variables
+
+    #Scale the df
+    df = encoder.scale(df, fm_root)
+
+    #Feature Engineering
+    if fe_enabled:
+        df = fe.fe(df, fm_root)
+
+    #Training the XGB Model
+    data, time = model.xgb_train(df, fm_root, baseline=baseline)
+    auc, pr, recall = model.xgb_eval(data)
+
+    return [auc, pr, recall, time]

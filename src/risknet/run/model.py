@@ -28,6 +28,7 @@ class XGBCVTrain(object):
         self.train_auc = None
         self.importance = None
         self.bst: Booster = Booster()
+        self.time = None
 
     def train(self, train_data: DataFrame, train_label: DataFrame, val_data: DataFrame, val_label: DataFrame, target: str, objective: str, maximize: bool = True,
               min_boosting_rounds: int = 3, max_boosting_rounds: int = 100, bayes_n_init: int =  50, bayes_n_iter: int = 5):
@@ -157,6 +158,8 @@ class XGBCVTrain(object):
 
         logger.info("Total time: " + str(round((total / 60), 2)) + "minutes")
 
+        self.time = str(round(total / 60), 2)
+
     def predict(self, scoring_data: DataFrame):
 
         dscore = xgb.DMatrix(scoring_data.values, feature_names=scoring_data.columns.values.tolist())
@@ -169,6 +172,9 @@ class XGBCVTrain(object):
 
     def get_importance(self):
         return self.importance
+    
+    def get_time(self):
+        return self.time
     
 
 
@@ -213,7 +219,7 @@ def xgb_train(df, fm_root, baseline=False, cat_label='default'):
     with open(fm_root + 'xgb_cv.pkl', 'wb') as f:
         pickle.dump(xgb_cv, f)
 
-    return [df_train_label, df_test_label, df_val_label]
+    return [[df_train_label, df_test_label, df_val_label], xgb_cv.get_time()]
 
 def xgb_eval(data):
     return [xgb_auc(data), xgb_pr(data), xgb_recall(data)]
