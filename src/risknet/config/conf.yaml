@@ -5,7 +5,7 @@ general:
   gcp_dask_workers: 4
 data:
   titanic_root: gs://albell-test/
-  fm_root : /teams/a15-subgroup-3/data
+  fm_root : /teams/a15-subgroup-3/data/
   files:
     - !!python/tuple ['monthly.parquet', 'dev_labels.parquet', 'dev_reg_labels.parquet']
 model:

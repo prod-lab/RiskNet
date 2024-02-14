@@ -34,8 +34,6 @@ def pipeline(fe_enabled=True, baseline=True):
         )
 
     #load data
-    # parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
-
     risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
     sys.path.append(risknet_run_path)
 
@@ -57,6 +55,10 @@ def pipeline(fe_enabled=True, baseline=True):
     #sys.path.append(r"src/risknet/proc") #reorient directory to access proc .py files
 
     #Pipeline:
+
+    #Pre-Step 1: Convert data to Parquet: 
+    #Note: only need to do this once!
+    #parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt', fm_root)
 
     #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
     label_prep.label_proc(fm_root, data)

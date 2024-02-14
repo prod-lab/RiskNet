@@ -3,8 +3,8 @@ import numpy as np
 import dask.dataframe as dd
 import dask.array as da
 
-def parquet_convert(data1, data2):
-    fm_root = "src/risknet/data/"
+def parquet_convert(data1, data2, fm_root):
+    fm_root = fm_root
     monthly = dd.read_csv(fm_root+data1, sep='|', header = None,dtype={23: 'object',
            24: 'object',
            28: 'object',
@@ -28,7 +28,7 @@ def parquet_convert(data1, data2):
 
     monthly['row_hash'] = monthly.assign(partition_count=50).partition_count.cumsum() % 50
 
-    monthly.to_parquet("src/risknet/data/" + '/monthly.parquet', partition_on = "row_hash")
+    monthly.to_parquet(fm_root + '/monthly.parquet', partition_on = "row_hash")
 
     org = dd.read_csv(fm_root+data2, sep='|', header = None,dtype={25: 'object',
            26: 'object',
@@ -44,6 +44,6 @@ def parquet_convert(data1, data2):
                                            "number_of_borrowers", "seller_name", "servicer_name", "super_conforming_flag"]
     org['row_hash'] = org.assign(partition_count=50).partition_count.cumsum() % 50
 
-    org.to_parquet("src/risknet/data/" + '/org.parquet', partition_on = "row_hash")
+    org.to_parquet(fm_root + '/org.parquet', partition_on = "row_hash")
 
 #parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')
