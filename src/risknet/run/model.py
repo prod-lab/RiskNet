@@ -257,9 +257,12 @@ def xgb_pr(data):
 def xgb_recall(data):
     '''Recall'''
     df_train_label, df_test_label, df_val_label = data
-    #xgb_train_precision, xgb_train_recall, xgb_train_thresholds = precision_recall_curve(df_train_label[cat_label], df_train_label['xgb_score'])
-    #xgb_test_precision, xgb_test_recall, xgb_test_thresholds = precision_recall_curve(df_test_label[cat_label], df_test_label['xgb_score'])
-    xgb_val_precision, xgb_val_recall, xgb_val_thresholds = precision_recall_curve(df_val_label[cat_label], df_val_label['xgb_score'])
 
-    val_recall: List[float] = [xgb_val_precision, xgb_val_recall, xgb_val_thresholds]
+    #Note: sklearn.precision_recall_curve returns 3 outputs: precision, recall, and threshholds. 
+    #We're only interested in the second output, recall.
+    xgb_train_recall = precision_recall_curve(df_train_label[cat_label], df_train_label['xgb_score'])[1]
+    xgb_test_recall = precision_recall_curve(df_test_label[cat_label], df_test_label['xgb_score'])[1]
+    xgb_val_recall = precision_recall_curve(df_val_label[cat_label], df_val_label['xgb_score'])[1]
+
+    val_recall: List[float] = [xgb_train_recall, xgb_test_recall, xgb_val_recall]
     return val_recall
