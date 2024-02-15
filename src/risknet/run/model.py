@@ -188,7 +188,7 @@ def xgb_train(df, fm_root, baseline=False, cat_label='default'):
     #df = pd.read_pickle(fm_root + 'df.pkl') #pull scaled df and labels
     df = df.merge(pd.read_pickle(fm_root + 'df.pkl')) #merge FE df + the clean df from df.pkl
 
-    print(df.info(verbose=True))
+    print(df.info(verbose=True)) #Prints all columns of df
 
     non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag', 'loan_sequence_number'] #Add loan_seq_num EC
     
@@ -239,7 +239,7 @@ def xgb_auc(data):
     fpr, tpr, thresholds = roc_curve(df_val_label[cat_label], df_val_label['xgb_score'], pos_label=1)
     xgb_val_auc: float = auc(fpr, tpr)
 
-    aucs = [xgb_train_auc, xgb_test_auc, xgb_val_auc]
+    aucs = [xgb_train_auc, xgb_val_auc, xgb_test_auc]
     return aucs
 
 def xgb_pr(data):
@@ -251,7 +251,7 @@ def xgb_pr(data):
     xgb_test_av_pr: float = average_precision_score(df_test_label[cat_label], df_test_label['xgb_score'], pos_label=1)
     xgb_val_av_pr: float = average_precision_score(df_val_label[cat_label], df_val_label['xgb_score'], pos_label=1)
 
-    av_pr: List[float] = [xgb_train_av_pr, xgb_test_av_pr, xgb_val_av_pr]
+    av_pr: List[float] = [xgb_train_av_pr, xgb_val_av_pr, xgb_test_av_pr]
     return av_pr
 
 def xgb_recall(data):
@@ -264,5 +264,5 @@ def xgb_recall(data):
     xgb_test_recall = precision_recall_curve(df_test_label[cat_label], df_test_label['xgb_score'])[1]
     xgb_val_recall = precision_recall_curve(df_val_label[cat_label], df_val_label['xgb_score'])[1]
 
-    val_recall: List[float] = [xgb_train_recall, xgb_test_recall, xgb_val_recall]
-    return val_recall
+    recalls: List[float] = [xgb_train_recall, xgb_test_recall, xgb_val_recall]
+    return recalls
