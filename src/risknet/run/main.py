@@ -1,20 +1,9 @@
 import matplotlib.pyplot as plt
 import time
 from risknet.run import pipeline
+import os
 
 start = time.time()
-
-auc = []
-pr = []
-recall = []
-times = []
-
-def get_val_metric(output, auc, pr, recall, times):
-    a, p, r, t = output
-    auc.append(a[2])
-    pr.append(p[2])
-    recall.append(r[2])
-    times.append(t)
 
 order = ['baseline', 'original', 'fe']
 
@@ -23,23 +12,35 @@ first = pipeline.pipeline(fe_enabled=False, baseline=True) #No FE, only feature 
 second = pipeline.pipeline(fe_enabled=False, baseline=False) #No FE, using all original Freddie Mac features
 third = pipeline.pipeline(fe_enabled=True, baseline=False) #Using FE features + original Freddie Mac features
 
-get_val_metric(first)
-get_val_metric(second)
-get_val_metric(third)
-
-plt.bar(order, auc)
-plt.show()
-
-plt.bar(order, pr)
-plt.show()
-
-plt.bar(order, recall)
-plt.show()
-
-plt.bar(order, time)
-plt.show()
+auc = [first[0][2], second[0][2], third[0][2]]
+pr = [first[1][2], second[1][2], third[1][2]]
+times = [first[3], second[3], third[3]]
 
 end = time.time()
 elapsed = end - start
 
 print("Time to run all 3 models and plot: " + str(round((elapsed / 60), 2)) + "minutes")
+
+print(order)
+print(auc)
+
+fig, ax = plt.subplots()
+ax.bar(order, auc)
+ax.set_ylabel("AUC")
+ax.set_title("AUC for first, second, and third iterations of models")
+plt.savefig('aucs')
+plt.show()
+
+fig, ax = plt.subplots()
+ax.bar(order, pr)
+ax.set_ylabel("Precision")
+ax.set_title("Precision for first, second, and third iterations of models")
+plt.savefig('prs')
+plt.show()
+
+fig, ax = plt.subplots()
+ax.bar(order, times)
+ax.set_ylabel("Time")
+ax.set_title("Time to train for first, second, and third iterations of models")
+plt.savefig('time')
+plt.show()
