@@ -23,7 +23,8 @@ from risknet.proc import parquet
 from risknet.proc import fe
 from risknet.run import model
 
-def pipeline(fe_enabled=True, baseline=True):
+#Default values: use feature engineered labels; do NOT focus on only credit score (baseline); use parquet
+def pipeline(fe_enabled=True, baseline=False, p_true=True):
     logger = logging.getLogger("freelunch")
 
     #This ensures the info-level logs get stored in a new file called "test.log"
@@ -61,7 +62,7 @@ def pipeline(fe_enabled=True, baseline=True):
     #parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt', fm_root)
 
     #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
-    label_prep.label_proc(fm_root, data)
+    label_prep.label_proc(fm_root, data, p_true)
 
 
     #Step 2: Reducer: Returns df of combined data to encode

@@ -31,7 +31,7 @@ The second two strs are the .pkl names for the .pkl files that will store "defau
 If the len(List) > 1, then we are pulling data from multiple years.
 
 '''
-def label_proc(fm_root, label_sets):
+def label_proc(fm_root, label_sets, parquet=True):
 
     performance_cols: List[str] =  ["loan_sequence_number", "monthly_reporting_period", "current_actual_upb",
                                    "current_loan_delinquency_status", "loan_age",
@@ -48,24 +48,26 @@ def label_proc(fm_root, label_sets):
                                    "delinquent_accrued_interest","del_disaster","borrower_assistance","month_mod_cost","interest_bearing", "row_hash"]
     
     for i in label_sets:
-        performance_df = pd.read_parquet(fm_root + i[0],engine='fastparquet')
-        performance_df.columns = performance_cols
-        performance_df = performance_df.loc[:,["loan_sequence_number", "monthly_reporting_period",
-                                    "current_loan_delinquency_status",
-                                    "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
-
-        # performance_df: DataFrame = pd.read_csv(fm_root + i[0], sep='|', index_col=False,
-        #                                     names=performance_cols, nrows=10_000_000).loc[:,
-        #                             ["loan_sequence_number", "monthly_reporting_period",
-        #                             "current_loan_delinquency_status",
-        #                             "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
-        #                             #EC: Added nrows to make faster
+        '''Process using parquet if parquet==True. Otherwise load the first 10M rows using pandas'''
+        if parquet:
+            performance_df = pd.read_parquet(fm_root + i[0],engine='fastparquet')
+            performance_df.columns = performance_cols
+            performance_df = performance_df.loc[:,["loan_sequence_number", "monthly_reporting_period",
+                                        "current_loan_delinquency_status",
+                                        "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
+        else:
+            performance_df: DataFrame = pd.read_csv(fm_root + i[0], sep='|', index_col=False,
+                                                 names=performance_cols).loc[:,
+                                         ["loan_sequence_number", "monthly_reporting_period",
+                                         "current_loan_delinquency_status",
+                                         "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
+                                         #EC: Added nrows to make faster
 
         performance_df[["current_loan_delinquency_status", "zero_balance_code"]] = performance_df[[
                                                                                 "current_loan_delinquency_status",
                                                                                 "zero_balance_code"]].astype(str)
 
-      
+    
         performance_df['default'] = np.where(
             ~performance_df['current_loan_delinquency_status'].isin(["XX", "0", "1", "2", "R", "   "]) |
             performance_df[

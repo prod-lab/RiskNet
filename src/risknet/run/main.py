@@ -5,21 +5,28 @@ import os
 
 start = time.time()
 
-order = ['baseline', 'original', 'fe']
-
 #pipeline.py returns auc, pr, recall, time
-first = pipeline.pipeline(fe_enabled=False, baseline=True) #No FE, only feature is credit score
-second = pipeline.pipeline(fe_enabled=False, baseline=False) #No FE, using all original Freddie Mac features
-third = pipeline.pipeline(fe_enabled=True, baseline=False) #Using FE features + original Freddie Mac features
+'''
+Generate:
+- Credit score model (cs): The only feature is credit score. Pandas loading uses first 10M records.
+- Original Gangster model (OG): the legacy code from Rod's project. Pandas loading uses first 10M records.
+- Parquet boost (p_boost): OG + using parquet data loading. Parquet uses the entire data file
+- All optimizations added (all_in): OG + parquet + feature engineering. Parquet uses the entire data file
+'''
+cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False) #No FE, only feature is credit score, no parquet
+og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=False) #Legacy code from Rod, no parquet
+p_boost = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=True) #OG + parquet
+all_in = pipeline.pipeline(fe_enabled=True, baseline=False) #Using FE features + original Freddie Mac features
 
-auc = [first[0][2], second[0][2], third[0][2]]
-pr = [first[1][2], second[1][2], third[1][2]]
-times = [first[3], second[3], third[3]]
+auc = [cs[0][2], og[0][2], all_in[0][2]]
+pr = [cs[1][2], og[1][2], all_in[1][2]]
+times = [cs[3], og[3], all_in[3]]
 
 end = time.time()
 elapsed = end - start
 
 print("Time to run all 3 models and plot: " + str(round((elapsed / 60), 2)) + "minutes")
+#About 25 minutes to run all 3 models
 
 print(order)
 print(auc)
