@@ -62,11 +62,13 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
     #parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt', fm_root)
 
     #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
+    if not p_true:
+        data = [('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')]
     label_prep.label_proc(fm_root, data, p_true)
 
-
     #Step 2: Reducer: Returns df of combined data to encode
-    df = reducer.reduce(fm_root, data[0]) 
+    df = reducer.reduce(fm_root, data[0])
+    print(df.shape[0])
     #As of right now, we are only pulling 2009 data. So we only need data[0].
 
     #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
