@@ -65,6 +65,17 @@ auc_bar.bar_label(auc_bar.containers[0], fontsize=10)
 plt.savefig('graphs/aucs.png')
 plt.show()
 
+pr_bar = sns.barplot(data=models, x='model', y='prs')
+pr_bar.bar_label(pr_bar.containers[0], fontsize=10)
+plt.savefig('graphs/prs.png')
+plt.show()
+
+time_bar = sns.barplot(data=models, x='model', y='times')
+time_bar.bar_label(time_bar.containers[0], fontsize=10)
+plt.savefig('graphs/time.png')
+plt.show()
+
+
 '''
 #fig, ax = plt.subplots()
 #rects = ax.bar(order, aucs)
