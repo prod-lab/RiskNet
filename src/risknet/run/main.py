@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import time
 from risknet.run import pipeline
 import seaborn as sns
+import pandas as pd
 
 start = time.time()
 
@@ -49,11 +50,27 @@ elapsed = end - start
 print("Time to run all 3 models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
 #About 25 minutes to run 3 models
 
-fig, ax = plt.subplots()
-rects = ax.bar(order, aucs)
-ax.bar_label(rects, padding=3)
-ax.set_ylabel("AUC")
-ax.set_title("AUC for first, second, and third iterations of models")
+models = pd.DataFrame(
+    {'model': order,
+     'auc': aucs,
+     'prs': prs,
+     'times': ts
+    })
+
+print(aucs)
+print(models)
+
+auc_bar = sns.barplot(data=models, x='model', y='auc')
+auc_bar.bar_label(auc_bar.containers[0], fontsize=10)
+plt.savefig('graphs/aucs.png')
+plt.show()
+
+'''
+#fig, ax = plt.subplots()
+#rects = ax.bar(order, aucs)
+#ax.bar_label(rects, padding=3)
+#ax.set_ylabel("AUC")
+#ax.set_title("AUC for first, second, and third iterations of models")
 plt.savefig('graphs/aucs.png')
 plt.show()
 
@@ -67,7 +84,9 @@ plt.show()
 
 fig, ax = plt.subplots()
 rects = ax.bar(order, ts)
+ax.bar_label(rects)
 ax.set_ylabel("Time")
 ax.set_title("Time to train for first, second, and third iterations of models")
 plt.savefig('graphs/time.png')
 plt.show()
+'''
