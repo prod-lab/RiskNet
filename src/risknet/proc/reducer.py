@@ -36,15 +36,15 @@ def reduce(fm_root, i, p_true):
         temp.columns = origination_cols
         temp = temp.drop(columns = "row_hash")
 
-        df = pd.concat([Reducer.simple_ts_split(temp.merge(
+        df = pd.concat([Reducer.em_simple_ts_split(temp.merge(
                 pd.read_pickle(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
                 how="inner").merge(
                 pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
-                how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+                how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1], test_size=1_000)])
     else:
-        df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + "historical_data_2009Q1.txt", sep='|', index_col=False, nrows=1_000_000, names=origination_cols).merge(
+        df = pd.concat([Reducer.em_simple_ts_split(pd.read_csv(fm_root + "historical_data_2009Q1.txt", sep='|', index_col=False, nrows=1_000_000, names=origination_cols).merge(
             pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number", how="inner").merge(
-            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number", how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number", how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1], test_size=1_000)])
     return df
 
 class Reducer:
@@ -128,6 +128,24 @@ class Reducer:
 
       df['flag'] = np.select(conditions, choices, default=np.nan)
       #df['flag'] = np.where(df.loc[:, sort_key].rank(pct=True, method='first') <= split_ratio, 'train', 'test')
+      return df
+
+    @staticmethod #MODIFIED BY EC TO GET TRAIN/TEST/VALIDATION and consistently-sized test size
+    def em_simple_ts_split(df: DataFrame, sort_key: str, split_ratio: list = [0.8, 0.1], test_size=1_000):
+      first_div = split_ratio[0]
+      df = df.sort_values(by=[sort_key])
+
+      #Identify last 1M data points
+      test_div = df.shape[0] - test_size #Get the last 1_000_000 entries
+
+      conditions = [df.loc[:, sort_key].rank(pct=True, method='first') <= first_div, \
+       (df.loc[:, sort_key].rank(pct=True, method='first') > first_div) & (df.loc[:, sort_key].rank(method='first') < test_div), \
+                    df.loc[:, sort_key].rank(method='first') > test_div]
+      choices     = [ 'train', 'val', 'test']
+
+      df['flag'] = np.select(conditions, choices, default=np.nan)
+      #df['flag'] = np.where(df.loc[:, sort_key].rank(pct=True, method='first') <= split_ratio, 'train', 'test')
+      print("train size: ", str(df['flag'].value_counts()['train']), ", val size: ", str(df['flag'].value_counts()['val']), ", test size: ", str(df['flag'].value_counts()['test']))
       return df
 
     @staticmethod
