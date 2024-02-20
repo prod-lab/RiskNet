@@ -5,6 +5,7 @@ It also defines the Reducer class where we use ts split (timeseries split) t
 
 from pandas import DataFrame
 import pandas as pd
+import dask.dataframe as dd
 import numpy as np
 from typing import List, Tuple
 import pyarrow.parquet as pq
@@ -41,12 +42,10 @@ def reduce(fm_root, i, p_true):
                 pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
                 how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
     else:
-        df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + 'historical_data_2009Q1.txt', sep='|', index_col=False,
-                                                            names=origination_cols, nrows=1_000_000).merge(
-            pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number",
-            how="inner").merge(
-            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number",
-            how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+        df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + "historical_data_2009Q1.txt", sep='|', index_col=False, nrows=1_000_000, names=origination_cols).merge(
+            pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number", how="inner").merge(
+            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number", how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+        print(df.head(5))
     return df
 
 class Reducer:

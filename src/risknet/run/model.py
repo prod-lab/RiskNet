@@ -158,7 +158,7 @@ class XGBCVTrain(object):
 
         logger.info("Total time: " + str(round((total / 60), 2)) + "minutes")
 
-        self.time = round(total / 60, 2)
+        self.time = float(round(total / 60, 2))
 
     def predict(self, scoring_data: DataFrame):
 

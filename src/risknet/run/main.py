@@ -28,12 +28,12 @@ def times(models):
 #pipeline.py returns auc, pr, recall, time
 '''
 Iterate to generate:
-- Credit score model (cs): The only feature is credit score
-- Original Gangster model (OG): the legacy code from Rod's project
-- All optimizations added (all_in): OG + parquet + feature engineering
+- Credit score model (cs): The only feature is credit score. Loaded using pandas
+- Original Gangster model (OG): the legacy code from Rod's project. Loaded using parquet
+- All optimizations added (all_in): OG + parquet + feature engineering. Loaded using parquet
 '''
 #Currently loading all with parquet
-cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=True)
+cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
 og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=True)
 all_in = pipeline.pipeline(fe_enabled=True, baseline=False, p_true=True)
 
@@ -47,7 +47,7 @@ ts = times(models_used)
 end = time.time()
 elapsed = end - start
 
-print("Time to run all 3 models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
+print("Time to run all " + str(len(order)) + " models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
 #About 25 minutes to run 3 models
 
 models = pd.DataFrame(
@@ -71,7 +71,7 @@ plt.savefig('graphs/prs.png')
 plt.show()
 
 time_bar = sns.barplot(data=models, x='model', y='times')
-time_bar.bar_label(time_bar.containers[0], fontsize=10)
+time_bar.bar_label(time_bar, fontsize=10)
 plt.savefig('graphs/time.png')
 plt.show()
 

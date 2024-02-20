@@ -61,14 +61,17 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
     #Note: only need to do this once!
     #parquet.parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt', fm_root)
 
-    #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl
+    #Step 1: Label Processing: Returns dev_labels.pkl and dev_reg_labels.pkl (essential if p_true)
+    #Note: if using parquet, we already labeled data with train/test/val flags in parquet.parquet_convert
     if not p_true:
-        data = [('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')]
-    label_prep.label_proc(fm_root, data, p_true)
+        data = [('historical_data_time_2009Q1.txt','dev_labels.pkl', 'dev_reg_labels.pkl')]
+        label_prep.label_proc(fm_root, data, p_true)
 
     #Step 2: Reducer: Returns df of combined data to encode
     df = reducer.reduce(fm_root, data[0], p_true)
     print(df.shape[0])
+    #What's the length of data we're using for this dataset? (Includes train/val/test)
+    # 621,484 entries when reading into parquet, 
     #As of right now, we are only pulling 2009 data. So we only need data[0].
 
     #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
