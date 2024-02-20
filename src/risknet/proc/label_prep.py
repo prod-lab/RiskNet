@@ -57,7 +57,7 @@ def label_proc(fm_root, label_sets, parquet=True):
                                         "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]
         else:
             performance_df: DataFrame = pd.read_csv(fm_root + i[0], sep='|', index_col=False,
-                                                 names=performance_cols).loc[:,
+                                                 names=performance_cols, nrows=10_000_000).loc[:,
                                          ["loan_sequence_number", "monthly_reporting_period",
                                          "current_loan_delinquency_status",
                                          "zero_balance_code", "loan_age", "remaining_months_to_maturity"]]

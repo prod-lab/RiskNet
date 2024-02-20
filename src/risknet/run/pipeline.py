@@ -67,7 +67,7 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
     label_prep.label_proc(fm_root, data, p_true)
 
     #Step 2: Reducer: Returns df of combined data to encode
-    df = reducer.reduce(fm_root, data[0])
+    df = reducer.reduce(fm_root, data[0], p_true)
     print(df.shape[0])
     #As of right now, we are only pulling 2009 data. So we only need data[0].
 

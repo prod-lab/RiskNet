@@ -17,7 +17,7 @@ input:
 - fm_root: str: a location where data is held
 - i: Tuple(str, str, str): holds the file names for [(fm_dataset, default_label.pkl, default_progress.pkl)]
 '''
-def reduce(fm_root, i):
+def reduce(fm_root, i, p_true):
     origination_cols: List[str] = ["credit_score", "first_payment_date", "first_time_homebuyer", "maturity_date",
                                 "metropolitan_division", "mortgage_insurance_percent", "number_of_units",
                                 "occupancy_status", "orig_combined_loan_to_value", "dti_ratio",
@@ -29,15 +29,23 @@ def reduce(fm_root, i):
 
     drop_cols: List[str] = ['maturity_date', 'metropolitan_division', 'original_interest_rate', 'property_state',
                             'postal_code', 'mortgage_insurance_percent', 'original_loan_term']
+    
+    if p_true:
+        temp = pd.read_parquet(fm_root + 'org.parquet')
+        temp.columns = origination_cols
+        temp = temp.drop(columns = "row_hash")
 
-    temp = pd.read_parquet(fm_root + 'org.parquet')
-    temp.columns = origination_cols
-    temp = temp.drop(columns = "row_hash")
-
-    df = pd.concat([Reducer.simple_ts_split(temp.merge(
-            pd.read_pickle(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
+        df = pd.concat([Reducer.simple_ts_split(temp.merge(
+                pd.read_pickle(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
+                how="inner").merge(
+                pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
+                how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+    else:
+        df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + 'historical_data_2009Q1.txt', sep='|', index_col=False,
+                                                            names=origination_cols, nrows=1_000_000).merge(
+            pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number",
             how="inner").merge(
-            pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
+            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number",
             how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
     return df
 
