@@ -45,7 +45,6 @@ def reduce(fm_root, i, p_true):
         df = pd.concat([Reducer.simple_ts_split(pd.read_csv(fm_root + "historical_data_2009Q1.txt", sep='|', index_col=False, nrows=1_000_000, names=origination_cols).merge(
             pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number", how="inner").merge(
             pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number", how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
-        print(df.head(5))
     return df
 
 class Reducer:

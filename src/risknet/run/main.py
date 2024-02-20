@@ -70,29 +70,6 @@ pr_bar.bar_label(pr_bar.containers[0], fontsize=10)
 plt.savefig('graphs/prs.png')
 plt.show()
 
-time_bar = sns.barplot(data=models, x='model', y='times')
-time_bar.bar_label(time_bar, fontsize=10)
-plt.savefig('graphs/time.png')
-plt.show()
-
-
-'''
-#fig, ax = plt.subplots()
-#rects = ax.bar(order, aucs)
-#ax.bar_label(rects, padding=3)
-#ax.set_ylabel("AUC")
-#ax.set_title("AUC for first, second, and third iterations of models")
-plt.savefig('graphs/aucs.png')
-plt.show()
-
-fig, ax = plt.subplots()
-rects = ax.bar(order, prs)
-ax.bar_label(rects, padding=3)
-ax.set_ylabel("Precision")
-ax.set_title("Precision for first, second, and third iterations of models")
-plt.savefig('graphs/prs.png')
-plt.show()
-
 fig, ax = plt.subplots()
 rects = ax.bar(order, ts)
 ax.bar_label(rects)
@@ -100,4 +77,3 @@ ax.set_ylabel("Time")
 ax.set_title("Time to train for first, second, and third iterations of models")
 plt.savefig('graphs/time.png')
 plt.show()
-'''
