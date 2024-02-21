@@ -55,6 +55,15 @@ def cat_null(df):
     return df
 
 '''
+inf_null: replaces infinite values with null values
+input:
+- df (DataFrame): passed in after Reducer
+'''
+def inf_null(df):
+    df = df.replace([np.inf, -np.inf], np.nan)
+    return df
+
+'''
 cat_enc: creates "was_missing" columns for each categorical giving binary 0/1 missing/present; also replaces NA with missing in categorical cols
 input: 
 - df (DataFrame)
@@ -138,17 +147,19 @@ def scale(df, fm_root):
     train_columns: List[str] = [i for i in df.columns.to_list() if i not in non_train_columns]
     #train_columns.remove('loan_sequence_number') #This is not a numerical column so it can't be scaled with min/max subtraction
 
-    train_mins = df.loc[df['flag'] == 'train'].loc[:, train_columns].min()
+    train_mins = inf_null(df.loc[df['flag'] == 'train'].loc[:, train_columns]).min()
 
     with open(fm_root + 'train_mins.pkl', 'wb') as f:
         pickle.dump(train_mins, f)
 
-    train_maxs = df.loc[df['flag'] == 'train'].loc[:, train_columns].max()
+    train_maxs = inf_null(df.loc[df['flag'] == 'train'].loc[:, train_columns]).max()
 
     with open(fm_root + 'train_maxs.pkl', 'wb') as f:
         pickle.dump(train_maxs, f)
 
-    df.loc[:, train_columns] = (df.loc[:, train_columns] - train_mins) / (train_maxs - train_mins) #Scaling values
+    #EC Note: wrapped inf_null around this to make sure no infinite values in columns
+    df.loc[:, train_columns] = inf_null((df.loc[:, train_columns] - train_mins) / (train_maxs - train_mins)) #Scaling values
+    df.dropna(axis=1, how='all', inplace=True) #Drop any columns that are ONLY comprised of NaN values
 
     '''Store dataframes and labels'''
 

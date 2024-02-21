@@ -219,32 +219,32 @@ def xgb_train(df, fm_root, baseline=False, cat_label='default'):
     with open(fm_root + 'xgb_cv.pkl', 'wb') as f:
         pickle.dump(xgb_cv, f)
 
-    return [[df_train_label, df_test_label, df_val_label], xgb_cv.get_time()]
+    return [[df_train_label, df_val_label, df_test_label], xgb_cv.get_time()]
 
 def xgb_eval(data):
     return [xgb_auc(data), xgb_pr(data), xgb_recall(data)]
 
 def xgb_auc(data):
-    df_train_label, df_test_label, df_val_label = data
+    df_train_label, df_val_label, df_test_label = data
     
     #training AUC
     fpr, tpr, thresholds = roc_curve(df_train_label[cat_label], df_train_label['xgb_score'], pos_label=1)
     xgb_train_auc: float = auc(fpr, tpr)
 
-    #testing AUC
-    fpr, tpr, thresholds = roc_curve(df_test_label[cat_label], df_test_label['xgb_score'], pos_label=1)
-    xgb_test_auc: float = auc(fpr, tpr)
-
     #validation AUC
     fpr, tpr, thresholds = roc_curve(df_val_label[cat_label], df_val_label['xgb_score'], pos_label=1)
     xgb_val_auc: float = auc(fpr, tpr)
+
+    #testing AUC
+    fpr, tpr, thresholds = roc_curve(df_test_label[cat_label], df_test_label['xgb_score'], pos_label=1)
+    xgb_test_auc: float = auc(fpr, tpr)
 
     aucs = [xgb_train_auc, xgb_val_auc, xgb_test_auc]
     return aucs
 
 def xgb_pr(data):
     '''Precision'''
-    df_train_label, df_test_label, df_val_label = data
+    df_train_label, df_val_label, df_test_label = data
 
     #Train, test, validation precision
     xgb_train_av_pr: float = average_precision_score(df_train_label[cat_label], df_train_label['xgb_score'], pos_label=1)
@@ -256,7 +256,7 @@ def xgb_pr(data):
 
 def xgb_recall(data):
     '''Recall'''
-    df_train_label, df_test_label, df_val_label = data
+    df_train_label, df_val_label, df_test_label = data
 
     #Note: sklearn.precision_recall_curve returns 3 outputs: precision, recall, and threshholds. 
     #We're only interested in the second output, recall.

@@ -68,10 +68,8 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
         label_prep.label_proc(fm_root, data, p_true)
 
     #Step 2: Reducer: Returns df of combined data to encode
-    df = reducer.reduce(fm_root, data[0], p_true)
-    #What's the length of data we're using for this dataset? (Includes train/val/test)
-    # 621,484 entries when reading into parquet, 
     #As of right now, we are only pulling 2009 data. So we only need data[0].
+    df = reducer.reduce(fm_root, data[0], p_true)
 
     #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
     #and uncomment this code:
@@ -88,6 +86,9 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
 
     # where we have explicit mappings of nulls
     df = encoder.cat_null(df)
+
+    #Replace 'infinity' values with null values:
+    df = encoder.inf_null(df)
 
     #Data Cleaning 2: Categorical, Ordinal, and RME Encoding
     # interaction effects
@@ -114,7 +115,8 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
         df = fe.fe(df, fm_root)
 
     #Training the XGB Model
-    data, time = model.xgb_train(df, fm_root, baseline=baseline)
+    print(df.max())
+    data, time = model.xgb_train(df, fm_root, baseline=baseline, cat_label='default')
     auc, pr, recall = model.xgb_eval(data)
 
     return [auc, pr, recall, time]

@@ -33,12 +33,13 @@ Iterate to generate:
 - All optimizations added (all_in): OG + parquet + feature engineering. Loaded using parquet
 '''
 #Currently loading all with parquet
-cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
-og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=True)
-all_in = pipeline.pipeline(fe_enabled=True, baseline=False, p_true=True)
-
-models_used = [cs, og, all_in]
-order = ['credit_score', 'original', 'feature_eng']
+#cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
+#og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=False)
+og_parquet = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=True)
+#all_in = pipeline.pipeline(fe_enabled=True, baseline=False, p_true=True)
+'''
+models_used = [cs, og, og_parquet, all_in]
+order = ['credit_score', 'original', 'original_with_parquet', 'feature_eng']
 
 aucs = auc(models_used)
 prs = pr(models_used)
@@ -77,3 +78,4 @@ ax.set_ylabel("Time")
 ax.set_title("Time to train for first, second, and third iterations of models")
 plt.savefig('graphs/time.png')
 plt.show()
+'''
