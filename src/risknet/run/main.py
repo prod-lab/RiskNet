@@ -33,13 +33,13 @@ Iterate to generate:
 - All optimizations added (all_in): OG + parquet + feature engineering. Loaded using parquet
 '''
 #Currently loading all with parquet
-#cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
-#og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=False)
+cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
+og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=False)
 og_parquet = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=True)
-#all_in = pipeline.pipeline(fe_enabled=True, baseline=False, p_true=True)
-'''
+all_in = pipeline.pipeline(fe_enabled=True, baseline=False, p_true=True)
+
 models_used = [cs, og, og_parquet, all_in]
-order = ['credit_score', 'original', 'original_with_parquet', 'feature_eng']
+order = ['credit_score', 'original', 'original_with_parquet', 'feature_eng_with_parquet']
 
 aucs = auc(models_used)
 prs = pr(models_used)
@@ -49,7 +49,7 @@ end = time.time()
 elapsed = end - start
 
 print("Time to run all " + str(len(order)) + " models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
-#About 25 minutes to run 3 models
+#About 25 minutes to run all models
 
 models = pd.DataFrame(
     {'model': order,
@@ -61,21 +61,28 @@ models = pd.DataFrame(
 print(aucs)
 print(models)
 
-auc_bar = sns.barplot(data=models, x='model', y='auc')
-auc_bar.bar_label(auc_bar.containers[0], fontsize=10)
+plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
+fig, ax = plt.subplots()
+auc_bar = sns.barplot(data=models, x='model', y='auc').set_title('Performance (AUC) for each model')
+#auc_bar.bar_label(auc_bar.containers[0], fontsize=10)
+ax.set_xticklabels(ax.get_xticks(), rotation = 45)
 plt.savefig('graphs/aucs.png')
 plt.show()
 
-pr_bar = sns.barplot(data=models, x='model', y='prs')
-pr_bar.bar_label(pr_bar.containers[0], fontsize=10)
+plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
+fig, ax = plt.subplots()
+pr_bar = sns.barplot(data=models, x='model', y='prs').set_title('Performance (Precision) for each model')
+#pr_bar.bar_label(pr_bar.containers[0], fontsize=10)
+ax.set_xticklabels(ax.get_xticks(), rotation = 45)
 plt.savefig('graphs/prs.png')
 plt.show()
 
+plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
 fig, ax = plt.subplots()
 rects = ax.bar(order, ts)
 ax.bar_label(rects)
 ax.set_ylabel("Time")
+ax.set_xticklabels(ax.get_xticks(), rotation = 45)
 ax.set_title("Time to train for first, second, and third iterations of models")
 plt.savefig('graphs/time.png')
 plt.show()
-'''

@@ -115,7 +115,7 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
         df = fe.fe(df, fm_root)
 
     #Training the XGB Model
-    print(df.max())
+    print(df.columns)
     data, time = model.xgb_train(df, fm_root, baseline=baseline, cat_label='default')
     auc, pr, recall = model.xgb_eval(data)
 
