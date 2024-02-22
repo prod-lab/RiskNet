@@ -215,6 +215,132 @@ def xgb_train(df, fm_root, baseline=False, cat_label='default'):
 
     return [df_train_label, df_test_label, df_val_label]
 
+def xgb_trainRT(df, fm_root, baseline=False, cat_label='default'):
+    #temp imports 
+    import ray
+    from ray import train, tune
+    from ray.tune.search import ConcurrencyLimiter
+    from ray.tune.search.bayesopt import BayesOptSearch
+    from sklearn.metrics import roc_auc_score
+    import xgboost as xgb
+    
+    non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag', 'loan_sequence_number']
+    #Set up DF
+    #df = pd.read_pickle(fm_root + 'df.pkl') #pull scaled df and labels
+    df = df.merge(pd.read_pickle(fm_root + 'df.pkl'))
+    
+    if baseline == True:
+        train_columns : List[str] = ['credit_score']
+    else:
+        train_columns: List[str] = [i for i in df.columns.to_list() if i not in non_train_columns]
+        
+    #Get minmax values
+    df_train_minmax: DataFrame = df.loc[df['flag'] == 'train'].loc[:, train_columns]
+    df_train_label: DataFrame = df.loc[df['flag'] == 'train'].loc[:, ['default']]
+    df_train_label_reg: DataFrame = df.loc[df['flag'] == 'train'].loc[:, ['undefaulted_progress']]
+    df_test_minmax: DataFrame = df.loc[df['flag'] == 'test'].loc[:, train_columns]
+    df_test_label: DataFrame = df.loc[df['flag'] == 'test'].loc[:, ['default']]
+    df_test_label_reg: DataFrame = df.loc[df['flag'] == 'test'].loc[:, ['undefaulted_progress']]
+    df_val_minmax: DataFrame = df.loc[df['flag'] == 'val'].loc[:, train_columns]
+    df_val_label: DataFrame = df.loc[df['flag'] == 'val'].loc[:, ['default']]
+    df_val_label_reg: DataFrame = df.loc[df['flag'] == 'val'].loc[:, ['undefaulted_progress']]
+    
+    num_samples = 1000
+    search_space = {
+        "steps": 100,
+        "eta": tune.uniform(0.01,0.1),
+        "max_depth": tune.uniform(3,25),
+        "min_child_weight": tune.uniform(3,7),
+        "subsample": tune.uniform(0.6,1.0),
+        "colsample_bytree": tune.uniform(0.6, 1.0),
+        "l_2": tune.uniform(0.01, 1.0),
+        "l_1": tune.uniform(0, 1.0),
+        "rounds": tune.uniform(3, 100)
+    }
+    
+    def evaluate(
+        step, 
+        eta, 
+        gamma, 
+        max_depth, 
+        min_child_weight, 
+        subsample, 
+        colsample_bytree, 
+        l_2, 
+        l_1, 
+        rounds,
+        ):
+        # code here to run xgboost model on evaluate params
+        model = xgb.XGBClassifier(
+            eta=eta,
+            gamma=gamma,
+            max_depth=int(max_depth),
+            min_child_weight=min_child_weight,
+            subsample=subsample,
+            colsample_bytree=colsample_bytree,
+            l_2=l_2,
+            l_1=l_1,
+            rounds=rounds,
+            objective='binary:logistic'
+        )
+        model.fit(df_train_minmax, df_train_label)
+        preds = model.predict_proba(df_test_minmax)[:, 1]
+        auc_out = roc_auc_score(df_test_label, preds)
+        return auc_out
+    
+    def objective(config):
+        for step in range(config["steps"]):
+            score = evaluate(
+                        step, 
+                        config["eta"], 
+                        config["max_depth"], 
+                        config["min_child_weight"],
+                        config["subsample"],
+                        config["colsample_bytree"],
+                        config["l_2"],
+                        config["l_1"],
+                        config["rounds"]
+                        )
+            train.report({"iterations": step, "auc": score})
+            
+    algo = BayesOptSearch(
+        utility_kwargs={"kind": "ucb", "kappa": 2.5, "xi": 0.0})
+    algo = ConcurrencyLimiter(algo, max_concurrent=8)
+    
+    tuner = tune.Tuner(
+                    objective,
+                    tune_config=tune.TuneConfig(
+                        metric="auc",
+                        mode="max",
+                        search_alg=algo,
+                        num_samples=num_samples,
+                    ),
+                    param_space=search_space,
+                )
+    results = tuner.fit()
+    
+    #write code to return df_train_label, df_test_label, and df_val_label using best parameters found by tune
+    best_config = results.get_best_config(metric="auc", mode="max")
+    best_model = xgb.XGBClassifier(
+        eta=best_config["eta"],
+        gamma=best_config["gamma"],
+        max_depth=int(best_config["max_depth"]),
+        min_child_weight=best_config["min_child_weight"],
+        subsample=best_config["subsample"],
+        colsample_bytree=best_config["colsample_bytree"],
+        l_2=best_config["l_2"],
+        l_1=best_config["l_1"],
+        rounds=best_config["rounds"],
+        objective='binary:logistic'
+    )
+    best_model.fit(df_train_minmax, df_train_label)
+    df_train_label['preds'] = best_model.predict_proba(df_train_minmax)[:, 1]
+    df_test_label['preds'] = best_model.predict_proba(df_test_minmax)[:, 1]
+    df_val_label['preds'] = best_model.predict_proba(df_val_minmax)[:, 1]
+
+    return [df_train_label, df_test_label, df_val_label]
+
+
 def xgb_eval(data):
     return [xgb_auc(data), xgb_pr(data), xgb_recall(data)]
 

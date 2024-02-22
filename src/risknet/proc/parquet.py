@@ -4,7 +4,7 @@ import dask.dataframe as dd
 import dask.array as da
 
 def parquet_convert(data1, data2):
-    fm_root = "src/risknet/data/"
+    fm_root = "/home/zahmed/private/RiskNet/src/risknet/data/"
     monthly = dd.read_csv(fm_root+data1, sep='|', header = None,dtype={23: 'object',
            24: 'object',
            28: 'object',
@@ -28,7 +28,7 @@ def parquet_convert(data1, data2):
 
     monthly['row_hash'] = monthly.assign(partition_count=50).partition_count.cumsum() % 50
 
-    monthly.to_parquet("src/risknet/data/" + '/monthly.parquet', partition_on = "row_hash")
+    monthly.to_parquet("/home/zahmed/private/RiskNet/src/risknet/data/" + '/monthly.parquet', partition_on = "row_hash")
 
     org = dd.read_csv(fm_root+data2, sep='|', header = None,dtype={25: 'object',
            26: 'object',
@@ -44,6 +44,8 @@ def parquet_convert(data1, data2):
                                            "number_of_borrowers", "seller_name", "servicer_name", "super_conforming_flag"]
     org['row_hash'] = org.assign(partition_count=50).partition_count.cumsum() % 50
 
-    org.to_parquet("src/risknet/data/" + '/org.parquet', partition_on = "row_hash")
+    org.to_parquet("/home/zahmed/private/RiskNet/src/risknet/data/" + '/org.parquet', partition_on = "row_hash")
+    
+    print("done")
 
 #parquet_convert('historical_data_time_2009Q1.txt','historical_data_2009Q1.txt')

@@ -40,7 +40,7 @@ sys.path.append(risknet_run_path)
 risknet_proc_path = risknet_run_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'run')
 sys.path.append(risknet_proc_path) #reorient directory to access proc .py files
 
-config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf.yaml')
+config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'config','conf_template.yaml')
 with open(config_path) as conf:
     config = yaml.full_load(conf)
 
@@ -107,7 +107,7 @@ df = fe.fe(df, fm_root)
 #print(fe.info(verbose=True))
 
 #Training the XGB Model
-data = model.xgb_train(df, fm_root, baseline=False)
+data = model.xgb_trainRT(df, fm_root, baseline=False)
 auc, pr, recall = model.xgb_eval(data)
 
 print(auc)

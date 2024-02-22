@@ -170,3 +170,8 @@ override.tf.json
 
 # weird mac things
 *.swp
+
+#data stuff : parquet pkl txt
+*.parquet
+*.pkl
+/src/risknet/data/*.txt
