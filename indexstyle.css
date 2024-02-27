@@ -32,9 +32,6 @@ body {
     position: absolute;
     color: white;
   }
-  .text{
-    float: left;
-  }
   .h1{
     font-size: 50px;
     position: relative;
