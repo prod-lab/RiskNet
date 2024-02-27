@@ -29,28 +29,20 @@ body {
     color: #19dafa !important;
   }
   .banner{
-    width: 640px;
-    height: 40px;
     top: 25%;
-    left: 100px;
     position: absolute;
     color: white;
   }
   .text{
-    width: 300px;
     float: left;
   }
   .text h1{
     font-size: 43px;
-    width: 640px;
     position: relative;
-    margin-left: 20px;
     color: #66FCF1;
   }
   .text p{
     font-size: 15px;
-    width: 640px;
-    margin-left: 20px;
     line-height: 25px;
     color: white;
   }
