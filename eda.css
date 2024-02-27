@@ -29,16 +29,12 @@ body {
     color: #19dafa !important;
   }
   .banner{
-    width: 640px;
-    height: 40px;
     top: 25%;
-    left: 100px;
     position: absolute;
     color: white;
   }
   .text{
     float: left;
-    text-align: center;  
   }
   .text h1{
     font-size: 43px;
