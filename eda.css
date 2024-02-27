@@ -45,11 +45,10 @@ body {
     width: 640px;
     position: relative;
     margin-left: 20px;
+    text-align: center;  
   }
   .text p{
     font-size: 15px;
-    width: 640px;
-    margin-left: 20px;
-    line-height: 25px;
     color: white;
+    text-align: center;  
   }
