@@ -3,6 +3,16 @@ import numpy as np
 import dask.dataframe as dd
 import dask.array as da
 
+'''
+Converts the Freddie Mac .txt files into a .parquet partitions that are stored in the src/data/ folder.
+
+inputs:
+- data1 (str): filename for .txt that contains the "historical_data_time" file. For 2009 Q1, this file is called 'historical_data_time_2009Q1.txt'
+- data2 (str): filename for .txt that contains the "historical_data" file. For 2009 Q1, this file is called 'historical_data_2009Q1.txt'.
+- fm_root (str): file root path as described in /config/conf.yaml. EX: "src/risknet/data/"
+
+output: None
+'''
 def parquet_convert(data1, data2, fm_root):
     fm_root = fm_root
     monthly = dd.read_csv(fm_root+data1, sep='|', header = None,dtype={23: 'object',

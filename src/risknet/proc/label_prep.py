@@ -20,16 +20,17 @@ from risknet.config import handlers
 
 
 '''
-label_proc: defines "default" and "progress" for a loan. Also creates dev_labels.pkl, dev_reg_labels.pkl to store default and progress status.
-returns: none
-inputs:
-- fm_root: str : the location of the FM data files. Currently it should be "/data/".
+label_proc: defines "default" and "progress" for a loan. Also creates dev_labels.pkl, dev_reg_labels.pkl to store default status (whether a loan has defaulted) and progress (how many payments were made).
 
-- label_sets: List[Tuple[str, str, str]] : a list of Tuples, where each Tuple is (str, str, str). 
+inputs:
+- fm_root (str) : the location of the FM data files. Currently it should be "/data/".
+- label_sets (List[Tuple[str, str, str]]) : a list of Tuples, where each Tuple is (str, str, str). 
 For each Tuple (str, str, str), the first str = the name of the freddie mac dataset (either 2009 data, 2014 data, etc.).
 The second two strs are the .pkl names for the .pkl files that will store "default" and "progress" data for the freddie mac dataset.
 If the len(List) > 1, then we are pulling data from multiple years.
+- parquet (bool): indicates whether to load data from the partitioned parquet files or to load data using pandas
 
+output: None
 '''
 def label_proc(fm_root, label_sets, parquet=True):
 

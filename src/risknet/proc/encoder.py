@@ -67,9 +67,8 @@ def inf_null(df):
 cat_enc: creates "was_missing" columns for each categorical giving binary 0/1 missing/present; also replaces NA with missing in categorical cols
 input: 
 - df (DataFrame)
-- cat_label (str): usually 'default'.
 '''
-def cat_enc(df, cat_label='default'):
+def cat_enc(df):
     for i in categoricals:
         df["was_missing_" + i] = np.where(df[i].isnull(), 1, 0)
     df[categoricals]: DataFrame = df[categoricals].fillna("missing")
@@ -89,7 +88,8 @@ def ord_enc(df, fm_root):
     return df
 
 '''
-rme:
+rme: Performs regularized mean encoding on data in repository. Fits on training data. Saves RME object in a pickle file and then applies to all non-categorical data. 
+For numerical data, creates is_missing columns that document whetehr the value is missing; also fills NAs with 0
 inputs:
 - df (DataFrame)
 - fm_root (str): location of data in repository

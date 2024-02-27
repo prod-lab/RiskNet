@@ -3,6 +3,13 @@
 This is where everything runs!
 We call various functions from .model, .reducer, .encoder, etc. step-by-step to run the pipeline.
 Check out the comments to see what each part of the code does.
+
+Inputs:
+- fe_enabled: bool: whether the model includes feature engineering step (True) or not (False)
+- baseline: whether the model only uses credit score as a feature (True) or uses all features from the legacy code (False)
+- p_true: whether the model loads data using parquet (True) or only using pandas and .pkl files (False)
+
+Output: List: [auc, pr, recall, time] for a given model
 '''
 
 #Global Imports:
@@ -69,7 +76,7 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
 
     #Step 2: Reducer: Returns df of combined data to encode
     #As of right now, we are only pulling 2009 data. So we only need data[0].
-    df = reducer.reduce(fm_root, data[0], p_true)
+    df = reducer.reduce(fm_root, p_true)
 
     #However, if we want to add 2014 data in the future, we can add another Tuple(str,str,str) to the List data
     #and uncomment this code:

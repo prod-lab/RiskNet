@@ -14,14 +14,16 @@ from sklearn.model_selection import train_test_split
 
 '''
 reduce: for a given year + that year's labels and progress, concats all 3 datasets together and returns a complete dataset.
+
 input:
-- fm_root: str: a location where data is held
-- i: Tuple(str, str, str): holds the file names for [(fm_dataset, default_label.pkl, default_progress.pkl)]
+- fm_root: a location where data is held
 - p_true: Boolean: determines whether to use the entire parquet-loaded dataset (True) or the first 10 million rows of data using pandas (False)
 - test_size: int: the size (number of rows) for the test set
 - split_ratio: List(float, float): the train/val ratio of the dataset
+
+output: none
 '''
-def reduce(fm_root, i, p_true, test_size=1_000, split_ratio=[0.9, 0.1]):
+def reduce(fm_root, p_true, test_size=1_000, split_ratio=[0.9, 0.1]):
     origination_cols: List[str] = ["credit_score", "first_payment_date", "first_time_homebuyer", "maturity_date",
                                 "metropolitan_division", "mortgage_insurance_percent", "number_of_units",
                                 "occupancy_status", "orig_combined_loan_to_value", "dti_ratio",
