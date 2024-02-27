@@ -32,6 +32,7 @@ Iterate to generate:
 - Original Gangster model (OG): the legacy code from Rod's project. Loaded using parquet
 - All optimizations added (all_in): OG + parquet + feature engineering. Loaded using parquet
 '''
+
 #Currently loading all with parquet
 cs = pipeline.pipeline(fe_enabled=False, baseline=True, p_true=False)
 og = pipeline.pipeline(fe_enabled=False, baseline=False, p_true=False)
@@ -51,6 +52,8 @@ elapsed = end - start
 print("Time to run all " + str(len(order)) + " models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
 #About 25 minutes to run all models
 
+order = ['credit_score', 'original', 'original_with_parquet', 'feature_eng_with_parquet']
+
 models = pd.DataFrame(
     {'model': order,
      'auc': aucs,
@@ -58,31 +61,37 @@ models = pd.DataFrame(
      'times': ts
     })
 
-print(aucs)
-print(models)
+#print(aucs)
+#print(models)
 
-plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
+plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
 auc_bar = sns.barplot(data=models, x='model', y='auc').set_title('Performance (AUC) for each model')
-#auc_bar.bar_label(auc_bar.containers[0], fontsize=10)
-ax.set_xticklabels(ax.get_xticks(), rotation = 45)
+ax.bar_label(ax.containers[0], fontsize=10)
+ax.set(xlabel='Models', ylabel='Performance (AUC)')
+ax.set_xticklabels(order, rotation = 20, fontsize=10)
+plt.tight_layout()
 plt.savefig('graphs/aucs.png')
 plt.show()
 
-plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
+plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
 pr_bar = sns.barplot(data=models, x='model', y='prs').set_title('Performance (Precision) for each model')
-#pr_bar.bar_label(pr_bar.containers[0], fontsize=10)
-ax.set_xticklabels(ax.get_xticks(), rotation = 45)
+ax.bar_label(ax.containers[0], fontsize=10)
+ax.set(xlabel='Models', ylabel='Performance (Precision)')
+ax.set_xticklabels(order, rotation = 20, fontsize=10)
+plt.tight_layout()
 plt.savefig('graphs/prs.png')
 plt.show()
 
-plt.figure(figsize=(6,4)) # 6 inch wide, 4 inch high
+plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
 rects = ax.bar(order, ts)
-ax.bar_label(rects)
+ax.bar_label(ax.containers[0], fontsize=10)
 ax.set_ylabel("Time")
-ax.set_xticklabels(ax.get_xticks(), rotation = 45)
-ax.set_title("Time to train for first, second, and third iterations of models")
+ax.set_xticklabels(order, rotation = 20, fontsize=10)
+ax.set(xlabel='Models', ylabel='Time (minutes)')
+ax.set_title("Time to Train Models")
+plt.tight_layout()
 plt.savefig('graphs/time.png')
 plt.show()
