@@ -39,16 +39,15 @@ body {
   .text{
     width: 300px;
     float: left;
+    text-align: center;  
   }
   .text h1{
     font-size: 43px;
     width: 640px;
     position: relative;
     margin-left: 20px;
-    text-align: center;  
   }
   .text p{
     font-size: 15px;
     color: white;
-    text-align: center;  
   }
