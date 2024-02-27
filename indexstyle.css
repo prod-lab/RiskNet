@@ -32,11 +32,20 @@ body {
     position: absolute;
     color: white;
     text-align: center; 
+    padding-top: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
   }
   .h1{
     font-size: 50px;
     position: relative;
     color: #66FCF1;
+    text-align: center; 
+    padding-top: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    padding-left: 50px;
   }
   .p{
     font-size: 15px;
