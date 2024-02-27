@@ -30,7 +30,6 @@ body {
   }
   .banner{
     top: 25%;
-    position: absolute;
     color: white;
   }
   .text{
@@ -38,7 +37,7 @@ body {
   }
   .text h1{
     font-size: 43px;
-    position: relative;
+    text-align: center;
   }
   .text p{
     font-size: 15px;
