@@ -36,12 +36,12 @@ body {
   .text{
     float: left;
   }
-  .text h1{
+  .h1{
     font-size: 50px;
     position: relative;
     color: #66FCF1;
   }
-  .text p{
+  .p{
     font-size: 15px;
     line-height: 25px;
     color: white;
