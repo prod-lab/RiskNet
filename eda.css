@@ -38,14 +38,12 @@ body {
     padding-left: 50px;
     font-size: 50px;
   }
-  .text{
-    float: left;
   }
-  .text h1{
+  .h1{
     font-size: 43px;
     text-align: center;
   }
-  .text p{
+  .p{
     font-size: 15px;
     color: white;
   }
