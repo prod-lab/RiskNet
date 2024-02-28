@@ -64,5 +64,7 @@ body {
     padding-bottom: 50px;
     padding-left: 70px;
     background-color: #110c3a;
+    height: 100vh;
+    box-sizing: border-box;
 
   }
