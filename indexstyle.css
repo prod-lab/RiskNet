@@ -31,7 +31,7 @@ body {
   .active{
     color: #19dafa !important;
   }
-  .banner h1{
+  .banner{
     font-size: 25px;
     line-height: 25px;
     color: white;
@@ -42,19 +42,6 @@ body {
     background-color: white;
     height: 100vh;
     box-sizing: border-box;
-
-      /* Apply animation to this element */	
- animation: banner 0.75s ease-out;
-}
-/* Move it (define the animation) */
-@keyframes banner {
- 0%   { 
- transform: translateX(200%); 		
- }
- 100% { 
- transform: translateX(0%); 
- }
-  }
   
 .intro{
     font-size: 25px;
