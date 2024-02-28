@@ -33,9 +33,8 @@ body {
   }
   .banner{
     font-size: 70px;
-    line-height: 25px;
     color: white;
-    padding-top: 20%;
+    padding-top: 10%;
     height: 100vh;
     box-sizing: border-box;
     text-align: center;
@@ -43,7 +42,6 @@ body {
   
 .intro{
     font-size: 25px;
-    line-height: 25px;
     color: white;
     padding-top: 50px;
     padding-right: 70px;
