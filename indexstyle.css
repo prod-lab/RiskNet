@@ -39,9 +39,9 @@ body {
     padding-right: 70px;
     padding-bottom: 50px;
     padding-left: 70px;
-    background-color: white;
     height: 100vh;
     box-sizing: border-box;
+    text-align: center;
   }
   
 .intro{
