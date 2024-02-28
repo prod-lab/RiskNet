@@ -38,6 +38,8 @@ body {
     padding-bottom: 50px;
     padding-left: 50px;
     font-size: 60px;
+    height: 100vh;
+    box-sizing: border-box;
 
       /* Apply animation to this element */	
  animation: banner 3s ease-out;
@@ -61,16 +63,6 @@ body {
     padding-right: 70px;
     padding-bottom: 50px;
     padding-left: 70px;
+    background-color: #110c3a;
 
-     animation: banner 3s ease-out;
-}
-/* Move it (define the animation) */
-@keyframes banner {
- 0%   { 
- transform: translateY(200%); 		
- }
- 100% { 
- transform: translateY(0%); 
- }
-  }
   }
