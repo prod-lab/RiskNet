@@ -50,5 +50,6 @@ body {
     background-color: #110c3a;
     height: 100vh;
     box-sizing: border-box;
-
-  }
+    text-align: center;
+ }
+ html {scroll-behavior: smooth;}
