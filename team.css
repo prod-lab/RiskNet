@@ -49,7 +49,7 @@
 .button:hover {
   background-color: #555;
 }
-.meet{
+.meet h2{
   color: white;
   text-align: center; 
   padding-right: 50px;
@@ -57,7 +57,7 @@
   padding-left: 50px;
   font-size: 40px;
 }
-.mentor{
+.mentor p{
   color: white;
   text-align: center; 
   padding-right: 50px;
