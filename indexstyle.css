@@ -36,8 +36,22 @@ body {
     padding-bottom: 50px;
     padding-left: 50px;
     font-size: 100px;
+
+      /* Apply animation to this element */	
+ animation: banner 7s ease-out;
+}
+/* Move it (define the animation) */
+@keyframes banner {
+ 0%   { 
+ transform: translateY(200%); 		
+ }
+ 100% { 
+ transform: translateY(0%); 
+ }
   }
-  .p{
+  
+
+.p{
     font-size: 15px;
     line-height: 25px;
     color: white;
