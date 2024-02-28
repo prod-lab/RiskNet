@@ -31,7 +31,7 @@ body {
   .active{
     color: #19dafa !important;
   }
-  .banner{
+  .banner h1{
     color: white;
     text-align: center;
     padding-top: 50%;
