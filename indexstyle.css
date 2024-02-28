@@ -35,7 +35,7 @@ body {
     padding-right: 50px;
     padding-bottom: 50px;
     padding-left: 50px;
-    font-size: 100px;
+    font-size: 60px;
 
       /* Apply animation to this element */	
  animation: banner 3s ease-out;
@@ -52,11 +52,23 @@ body {
   
 
 .intro{
-    font-size: 15px;
+    font-size: 25px;
     line-height: 25px;
     color: white;
     padding-top: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
     padding-left: 50px;
+
+     animation: banner 3s ease-out;
+}
+/* Move it (define the animation) */
+@keyframes banner {
+ 0%   { 
+ transform: translateY(200%); 		
+ }
+ 100% { 
+ transform: translateY(0%); 
+ }
+  }
   }
