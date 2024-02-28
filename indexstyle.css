@@ -43,10 +43,10 @@ body {
 /* Move it (define the animation) */
 @keyframes banner {
  0%   { 
- transform: translateY(200%); 		
+ transform: translateX(200%); 		
  }
  100% { 
- transform: translateY(0%); 
+ transform: translateX(0%); 
  }
   }
   
