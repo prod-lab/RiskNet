@@ -29,7 +29,6 @@ body {
     color: #19dafa !important;
   }
   .banner{
-    position: absolute;
     color: white;
     text-align: center; 
     padding-top: 50px;
@@ -39,7 +38,6 @@ body {
   }
   .h1{
     font-size: 50px;
-    position: relative;
     color: #66FCF1;
     text-align: center; 
     padding-top: 50px;
