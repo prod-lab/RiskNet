@@ -224,6 +224,15 @@ def xgb_train(df, fm_root, baseline=False, cat_label='default'):
 def xgb_eval(data):
     return [xgb_auc(data), xgb_pr(data), xgb_recall(data)]
 
+'''
+Gets the training, validation, and testing AUC given training, validation, and testing predicted labels
+
+input:
+- data: List [train, validation, test]: Contains training, validation, and test predicted labels
+
+output:
+- List of [train, validation, test] AUC values
+'''
 def xgb_auc(data):
     df_train_label, df_val_label, df_test_label = data
     
@@ -242,6 +251,16 @@ def xgb_auc(data):
     aucs = [xgb_train_auc, xgb_val_auc, xgb_test_auc]
     return aucs
 
+
+'''
+Gets the training, validation, and testing precision given training, validation, and testing predicted labels
+
+input:
+- data: List [train, validation, test]: Contains training, validation, and test predicted labels
+
+output:
+- List of [train, validation, test] precision values
+'''
 def xgb_pr(data):
     '''Precision'''
     df_train_label, df_val_label, df_test_label = data
@@ -254,6 +273,15 @@ def xgb_pr(data):
     av_pr: List[float] = [xgb_train_av_pr, xgb_val_av_pr, xgb_test_av_pr]
     return av_pr
 
+'''
+Gets the training, validation, and testing recall given training, validation, and testing predicted labels
+
+input:
+- data: List [train, validation, test]: Contains training, validation, and test predicted labels
+
+output:
+- List of [train, validation, test] recall values
+'''
 def xgb_recall(data):
     '''Recall'''
     df_train_label, df_val_label, df_test_label = data
