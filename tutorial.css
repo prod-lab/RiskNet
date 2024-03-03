@@ -1,5 +1,8 @@
 body {
-  background-color: #110c3a;
+  background-image: url('image.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   font-family: 'Open Sans', sans-serif;
   
   text-align: center;
