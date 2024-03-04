@@ -68,6 +68,7 @@ db.sqlite3-journal
 
 #config
 /src/risknet/config/conf.yaml
+src/risknet/data/
 
 # Flask stuff:
 instance/

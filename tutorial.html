@@ -1,99 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <title>RiskNet</title>
-  <link rel="stylesheet" href="eda.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiskNet Tutorial</title>
+  <link rel="stylesheet" href="tutorial.css">
 </head>
+
 <body>
   <div class="container">
-    <center>
-      <div class="menu">
-        <ul>
-          <a href="index.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
-          </a>
-          <a href="EDA.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
-          </a>
-          <a href="model.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
-          </a>
-          <a href="results.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
-          </a>
-          <a href="tutorial.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
-          </a>
-          <a href="team.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
-          </a>
-        </ul>
-      </div>
-    </center>
-    <div class="banner">
-      <div class="text">
-        <center>
-            <h1>Getting Started with Risknet</h1>
-        </center>
-          <p style:"text-align:center">
-            Welcome to Risknet! Whether you're a student, researcher, or developer, this guide will help you understand and navigate RiskNet.
-          </p>
-          <p>
-            Risknet FAQs:
-            <details>
-              <summary>What is Risknet?</summary>
-              <p>Check out our <a href="index.html">index page</a> to learn more about what Risknet is!</p>
-            </details>
-            <details>
-              <summary>What do I need to run Risknet?</summary>
-              <p>Risknet currently requires access to UCSD's DSMLP instance. Other than that, you need reliable internet to run this code.</p>
-              <p>For more information, check out Terin's Guide to <a href="https://docs.google.com/document/d/19oxhEYZNXGns8BH7Pbsv-_cDiTMR0-GFIOO_juxp9Sg/edit">"How to Set Up DSMLP".</a></p>
-            </details>
-            <details>
-              <summary>What dataset does Risknet use?</summary>
-              <p>
-                Risknet runs on a dataset called the Freddie Mac Single Family Loan-Level Dataset (link <a href="https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset">here</a>).
-                This dataset is free and regularly updated by the US's Federal Housing Finance Agency (FHFA) and data ranges from January 1st, 1999 to present day. Data is organized per financial quarter.
-              </p>
-              <p>Currently, Risknet runs on data from 2009 Q1 (that is, data instances from January to March of 2009). This quarter has a total of 3 million instances to train on.</p>
-            </details>
-            <details>
-              <summary>I want to use Risknet in my project. How can I credit the developers?</summary>
-              <p>
-                Thank you for asking! Crediting the developers is not only ethical, but legally required thanks to plagiarism laws.
-              </p>
-              <p>If you want to use this project for education purposes, please cite our code using the Github link as described on the MIT website <a href="https://integrity.mit.edu/handbook/writing-code">(here)</a></p>
-            </details>
-            <details>
-              <summary>Can I adapt Risknet for a for-profit goal?</summary>
-              <p>At this time, <b>we do not consent for our code to be copied for profit</b>. If you are interested in using Risknet as source code for a for-profit project, please reach out to the developers. You can reach us at the emails listed in our <a href="team.html">team page</a>.</p>
-            </details>
-          </p>
-          <p>
-            Risknet Resources:
-            <details>
-              <summary> Setting up DSMLP for RiskNet</summary>
-              <p>
-                <ul>
-                  <li>Terin's Risknet-specific Guide here: <a href="https://docs.google.com/document/d/19oxhEYZNXGns8BH7Pbsv-_cDiTMR0-GFIOO_juxp9Sg/edit">(link)</a></li>
-                  <li>UCSD's General DSMLP Documentation here: <a href="https://support.ucsd.edu/its?id=kb_article_view&sysparm_article=KB0032269">(here)</a></li>
-                </ul>
-              </p>
-            </details>
-            <details>
-              <summary>Risknet Documentation</summary>
-              <p>Riya and Emily's Risknet Documentation: <a href="https://docs.google.com/document/d/17sNzSFKvYIQb7fBuCUyPuQIypDjKD6fNE597OokpBBY/edit">(here)</a></p>
-              <p>GitHub Repository and Readme: <a href="https://github.com/prod-lab/RiskNet/tree/gh-pages">(here)</a></p>
-            </details>
-            <details>
-              <summary>Risknet Pip Package Questions</summary>
-              <p>Risknet PyPi Page: <a href="https://pypi.org/project/risknet/">(here)</a></p>
-            </details>
-          </p>
-          <p>
-            If you have questions about our directory or would like to suggest an update, please contact us at <a href="mailto:e1chin@ucsd.edu">e1chin@ucsd.edu</a>
-          </p>
-     </div>
+    <center>       
+    <div class="menu">
+    <ul>
+      <a href="index.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
+      </a>
+      <a href="EDA.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
+      </a>
+      <a href="model.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
+      </a>
+      <a href="results.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
+      </a>
+      <a href="tutorial.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
+      </a>
+      <a href="team.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
+      </a>
+      </ul>
+      </center>
   </div>
+
+  <header class="banner">
+    <h1>RiskNet Tutorial</h1>
+    <p>Welcome to the RiskNet tutorial! This guide will walk you through the steps to predict credit default using the
+      RiskNet package.</p>
+  </header>
+
+  <main class="content">
+    
+    </section>
+
+<section class="getting-started">
+  <h2>Getting Started</h2>
+
+    <p><b>1. Setting up your environment</b>: Ensure you have <code>Python</code> and <code>pip</code>installed on your system. Create a virtual
+      environment and activate it for RiskNet. For a containerized environment, RiskNet provides a <code>Docker image</code>. Refer to our <a href="https://docs.google.com/document/d/1bzSW1dIQg1xbr0qvtNB7DhVBaFcTQRXwFjURhHDCV0o/edit?usp=sharing">Docker User Guide</a>
+        for detailed instructions.</p>
+        <p><b>2. Installation</b>:To install the RiskNet package, run the following command:<code>pip install risknet</code>. </p>
+        <p><b>3. Explore the Code</b>: Dive into the RiskNet codebase by forking the repository from our <a href="https://github.com/prod-lab/RiskNet/tree/master">Github Repo</a></p>
+        <p><b>4. Understanding Structure</b>: RiskNet's architecture is designed for ease of use and extensibility:<br>
+        <code>/src/risknet</code>: The core directory containing all the source code.<br>
+        <code>/config</code>: Houses the conf.yaml file to assist with setup.<br>
+        <code>/data</code>: An empty directory for storing the Freddie Mac dataset.<br>
+        <code>/jobs</code>: Includes scripts like cloud_etl.py for cloud interactions.<br>
+        <code>/proc</code>: Contains preprocessing modules for data preparation.<br>
+        <code>/sys</code>: Setup system environment and logging mechanisms here.</p>
+
+</section>
+
+
+  <section class="dataset">
+    <h2>Data Introduction and How to Access</h2>
+    <p><b>Data Introduction: </b></p> <p></p>Our model is based on <code>Freddie Mac Single-Family Loan Dataset</code>. As part of a larger effort to increase transparency, Freddie Mac is making available loan-level credit performance data
+    on all mortgages that the company purchased or guaranteed from 1999 to 2023.
+</p>
+    <p><b>How to Access Data: </b></p>
+    <ol>
+      <ul>1. Visit the <a href="http://www.freddiemac.com/">Freddie Mac website</a></ul>
+      <ul>
+2. Download the 2009_Q1 dataset and unzip it.
+      </ul>
+      <ul>
+3. Place the data in the <code>src/data</code> directory of your local RiskNet repository.
+      </ul>
+          </ol>
+    </section>
   
+ <section>
+  <p>
+    Risknet FAQs:
+    <details>
+      <summary>What is Risknet?</summary>
+      <p>Check out our <a href="index.html">index page</a> to learn more about what Risknet is!</p>
+    </details>
+    <details>
+      <summary>What do I need to run Risknet?</summary>
+      <p>Risknet currently requires access to UCSD's DSMLP instance. Other than that, you need reliable internet to run this code.</p>
+      <p>For more information, check out Terin's Guide to <a href="https://docs.google.com/document/d/19oxhEYZNXGns8BH7Pbsv-_cDiTMR0-GFIOO_juxp9Sg/edit">"How to Set Up DSMLP".</a></p>
+    </details>
+    <details>
+      <summary>What dataset does Risknet use?</summary>
+      <p>
+        Risknet runs on a dataset called the Freddie Mac Single Family Loan-Level Dataset (link <a href="https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset">here</a>).
+        This dataset is free and regularly updated by the US's Federal Housing Finance Agency (FHFA) and data ranges from January 1st, 1999 to present day. Data is organized per financial quarter.
+      </p>
+      <p>Currently, Risknet runs on data from 2009 Q1 (that is, data instances from January to March of 2009). This quarter has a total of 3 million instances to train on.</p>
+    </details>
+    <details>
+      <summary>I want to use Risknet in my project. How can I credit the developers?</summary>
+      <p>
+        Thank you for asking! Crediting the developers is not only ethical, but legally required thanks to plagiarism laws.
+      </p>
+      <p>If you want to use this project for education purposes, please cite our code using the Github link as described on the MIT website <a href="https://integrity.mit.edu/handbook/writing-code">(here)</a></p>
+    </details>
+    <details>
+      <summary>Can I adapt Risknet for a for-profit goal?</summary>
+      <p>At this time, <b>we do not consent for our code to be copied for profit</b>. If you are interested in using Risknet as source code for a for-profit project, please reach out to the developers. You can reach us at the emails listed in our <a href="team.html">team page</a>.</p>
+    </details>
+  </p>
+          </section>
+          
+  <section>        
+  <p>
+    Risknet Resources:
+    <details>
+      <summary> Setting up DSMLP for RiskNet</summary>
+      <p>
+        <ul>
+          <li>Terin's Risknet-specific Guide here: <a href="https://docs.google.com/document/d/19oxhEYZNXGns8BH7Pbsv-_cDiTMR0-GFIOO_juxp9Sg/edit">(link)</a></li>
+          <li>UCSD's General DSMLP Documentation here: <a href="https://support.ucsd.edu/its?id=kb_article_view&sysparm_article=KB0032269">(here)</a></li>
+        </ul>
+      </p>
+    </details>
+    <details>
+      <summary>Risknet Documentation</summary>
+      <p>Riya and Emily's Risknet Documentation: <a href="https://docs.google.com/document/d/17sNzSFKvYIQb7fBuCUyPuQIypDjKD6fNE597OokpBBY/edit">(here)</a></p>
+      <p>GitHub Repository and Readme: <a href="https://github.com/prod-lab/RiskNet/tree/gh-pages">(here)</a></p>
+    </details>
+    <details>
+      <summary>Risknet Pip Package Questions</summary>
+      <p>Risknet PyPi Page: <a href="https://pypi.org/project/risknet/">(here)</a></p>
+    </details>
+  </p>
+  <p>
+    If you have questions about our directory or would like to suggest an update, please contact us at <a href="mailto:e1chin@ucsd.edu">e1chin@ucsd.edu</a>
+  </p>
+          </section>
+          
+  <section class="docker-support">
+    <h2>Need Help?</h2>
+    <p>If you encounter any issues or have questions, don't hesitate to reach out to us through our GitHub issues page.</p>
+  </section>
+
+    
+
+    <section class="steps">
+      <h2>Join the Development</h2>
+      <p>Interested in contributing? We welcome pull requests and community contributions. Check out our contribution guidelines
+      for more information.</p>
+    </section>
+
+    
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 RiskNet. All rights reserved.</p>
+  </footer>
 </body>
 
 </html>
