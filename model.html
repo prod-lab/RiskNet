@@ -1,7 +1,7 @@
 <html>
 <head>
   <title>RiskNet</title>
-  <link rel="stylesheet" href="indexstyle.css">
+  <link rel="stylesheet" href="model.css">
 </head>
 <body>
   <div class="container">
@@ -29,18 +29,77 @@
         </ul>
       </div>
     </center>
-    <div class="banner">
-      <div class="text">
-        <h1>Model</h1>
-        <p>
-          Don't only practice your art, but force your way into its secrets, for it and knowledge can raise men to the divine
-        </p>
-      </div>
-<!--       <div class="app-picture">
-        <img src="tech.jpeg">
-      </div> -->
 
-  </div>
+    <header class="banner">
+      <h1>Models Used in Risknet</h1>
+      <p>What techniques do we use to improve financial risk modeling performance?</p>
+    </header>
+
+    <!-- Starting content-->
+    <main class="content">
+      <section>
+        <h2>What Do These Models Mean?</h2>
+        <p>Remember, our goal in this research project is to <b>improve financial risk modeling using machine learning + techniques</b>.</p>
+        <p>To do this, we generated multiple machine learning models which predicted mortgage default. By generating multiple models which use different techniques and processes, we can compare (and visualize!) what works and what doesn't.</p>
+        <p>We will define and explore these models below.</p>
+        <p class="small">Psst! If you want to skip straight to results, check out our <a href="results.html", target="_blank">Results</a> tab!</p>
+      </section>
+
+      <section>
+        <h2>General Model Decisions:</h2>
+        <p>AKA: What is consistent for all models that we implemented?</p>
+        <p><b>Model Architecture:</b> Thanks to domain research and a suggestion from our mentor, we chose to exclusively build all our machine learning model instances using a library called <b>XGBoost</b>. XGBoost excels<sup><a href="https://www.analyticsvidhya.com/blog/2024/01/xgboost-for-time-series-forecasting/" target="_blank" id="ref1">1</a></sup> at synthesizing and modeling dense tabular timeseries data (which is the data we are using).</p>
+        <p><b>Language: </b>We worked in Python<sup><a href="https://www.python.org/" target="_blank" id="ref2">2</a></sup> as we were most familiar with the language.</p>
+        <p><b>Environment: </b>To ensure we were all working on the same OS, we ran and hosted our code on UCSD's DSMLP. You can find out more about how we used DSMLP <a href="tutorial.html" title="Jump to Tutorial Page">here</a>. We also used Docker Images<sup><a href="https://docs.docker.com/get-started/" target="_blank" id="ref3">3</a></sup> to standardize our OS.</p>
+        <hr></hr>
+        <sup id="fn1">1. ["XGboost for Timeseries Forecasting", Analytics Vidha]<a href="https://www.analyticsvidhya.com/blog/2024/01/xgboost-for-time-series-forecasting/" title="Jump back to footnote 1 in the text.">↩</a></sup>
+        <br>
+        <sup id="fn2">2. [Python.org]<a href="https://www.python.org/" title="Jump back to footnote 2 in the text.">↩</a></sup>
+        <br>
+        <sup id="fn3">3. [Docker Docs]<a href="https://docs.docker.com/get-started/" title="Jump back to footnote 3 in the text.">↩</a></sup>
+      </section>
+
+      <section>
+        <h2>Specific Model Architecture</h2>
+        <p>Now let's dive into the specific models we are testing.</p>
+        <hr>
+        <h4>The Baseline Model</h4>
+        <p>We wanted this to represent <b>how banks currently predict mortgage defaults using credit score</b>. For simplicity's sake, we assume the bank <b>only</b> uses credit score as its single input.</p>
+        <p>We will use this baseline to contextualize our other models and see if/how much they "improved" performance compared to existing technologies.</p>
+        <ul>
+          <li>Features: Credit Score only</li>
+          <li>Data Loading Tool: Pandas (only able to load 5,000 data points for train/test/val)</li>
+        </ul>
+        <hr>
+        <p>Next, we created <b>model iterations with new techniques/tools to try to beat the baseline model</b></p>
+        <hr>
+        <h4>The Original Model</h4>
+        <p>This code predicts mortgage defaults using <b>credit score and additional contextual information</b> pulled from the Freddie Mac dataset. Additional context information (additional features/columns) includes number of cosigners; which bank the mortgage was approved at; etc.</p>
+        <ul>
+          <li>Features: Credit Score <b>+ Freddie Mac Contextual Columns</b></li>
+          <li>Data Loading Tool: Pandas (only able to load 5,000 data points for train/test/val)</li>
+        </ul>
+        <hr>
+        <h4>The Original + Parquet Model</h4>
+        <p>This code uses the same features/columns as the previous model, but <b>loads data using Parquet</b>. This allows for more data to be loaded into partitions without overwhelming the system's memory.</p>
+        <ul>
+          <li>Features: Credit Score + Freddie Mac Contextual Columns</li>
+          <li>Data Loading Tool: <b>Parquet (able to load 3,000,000+ data points for train/test/val)</b></li>
+        </ul>
+        <hr>
+        <h4>The Original + Parquet + Feature Engineering Model</h4>
+        <p>This code uses the same features and parquet loading as the previous model, but <b>also applies feature engineering techniques to the columns</b>. 
+          This allows a package called <code>featuretools</code><sup><a href="https://featuretools.alteryx.com/en/stable/index.html" target="_blank" id="ref4">4</a></sup> to recursively
+        synthesize new features from the existing columns to provide more insight and context to data.</p>
+        <p>An example of feature engineering: Given a column <code>Number of Co-Signers</code>, feature engineering can iterate over the column and generate the mean, median, and mode values per zip code. This might help the model contextualize and understand whether a number is important/helps classify default or not.</p>
+        <p>Note: this data uses the <b>most</b> data (both in terms of loading instances and generating columns) out of all model iterations.</p>
+        <ul>
+          <li>Features: Credit Score + Freddie Mac Contextual Columns <b>+ Feature Engineered Context Columns</b></li>
+          <li>Data Loading Tool: Parquet (able to load 3,000,000+ data points for train/test/val)</li>
+        </ul>
+        <hr></hr>
+        <sup id="ref4">4. [Alteryx FeatureTools Documentation Page]<a href="https://featuretools.alteryx.com/en/stable/index.html" title="Jump back to footnote 4 in the text.">↩</a></sup>
+      </section>
   
 </body>
 
