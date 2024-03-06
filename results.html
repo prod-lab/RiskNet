@@ -42,8 +42,8 @@
     <!--- Summary --->
     <section>
       <h1>Summary of Results</h1>
-      <p>As originally hypothesized, <bold>increasing the amount of training data led to better performance. However, it also cost more: the time (resources) increased exponentially.</bold></p>
-      <p>While different mechanics can be tuned in the model to increase/decrease performance/cost, our results as of now can still open interesting conversations with policy analysts and bank representatives when considering which mortage risk models are feasible to rely on.</p>
+      <p>As originally hypothesized, <b>increasing the amount of training data led to better performance. However, it also cost more: the time (resources) increased exponentially.</b></p>
+      <p>We hope to use our findings to open interesting conversations with policy analysts and bank representatives about which mortage risk models are feasible to rely on.</p>
     </section>
   
   <!-- Looking over performance in terms of AUC, precision -->
@@ -70,7 +70,7 @@
         <figcaption>Precision for each model. References to each model <a href="model.html">here</a>.</figcaption>
       </div>
       </div>
-      <p>The following graphs show the model's performance in terms of AUC and precision.</p>
+      <p>Main Idea: <b>As the amount of data (instances OR features) increases, performance improves. Specifically, AUC increases linearly while precision increases exponentially</b>.</p>
       <p>Here are some highlights:</p>
       <ul>
         <li>AUC (overall performance) increases roughly linearly when adding more features (see <code>original</code> in yellow compared to <code>credit score</code>, as well as <code>feature_eng_with_parquet</code> as compared to <code>original with parquet</code>)</li>
