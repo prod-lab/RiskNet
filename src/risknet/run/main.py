@@ -52,7 +52,7 @@ elapsed = end - start
 print("Time to run all " + str(len(order)) + " models and plot: " + str(round((elapsed / 60), 2)) + " minutes")
 #About 25 minutes to run all models
 
-order = ['credit_score', 'original', 'original_with_parquet', 'feature_eng_with_parquet']
+order = ['credit score', 'original', 'original with parquet', 'feature eng with parquet']
 
 models = pd.DataFrame(
     {'model': order,
@@ -68,7 +68,7 @@ plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
 auc_bar = sns.barplot(data=models, x='model', y='auc').set_title('Performance (AUC) for each model')
 ax.bar_label(ax.containers[0], fontsize=10)
-ax.set(xlabel='Models', ylabel='Performance (AUC)')
+ax.set(xlabel='Models', ylabel='AUC')
 ax.set_xticklabels(order, rotation = 20, fontsize=10)
 plt.tight_layout()
 plt.savefig('graphs/aucs.png')
@@ -78,7 +78,7 @@ plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
 pr_bar = sns.barplot(data=models, x='model', y='prs').set_title('Performance (Precision) for each model')
 ax.bar_label(ax.containers[0], fontsize=10)
-ax.set(xlabel='Models', ylabel='Performance (Precision)')
+ax.set(xlabel='Models', ylabel='Precision')
 ax.set_xticklabels(order, rotation = 20, fontsize=10)
 plt.tight_layout()
 plt.savefig('graphs/prs.png')
@@ -86,12 +86,10 @@ plt.show()
 
 plt.figure(figsize=(20,10)) # 12 inch wide, 4 inch high
 fig, ax = plt.subplots()
-rects = ax.bar(order, ts)
+pr_bar = sns.barplot(data=models, x='model', y='times').set_title('Cost (Time) for each model')
 ax.bar_label(ax.containers[0], fontsize=10)
-ax.set_ylabel("Time")
+ax.set(xlabel='Models', ylabel='Time (Minutes)')
 ax.set_xticklabels(order, rotation = 20, fontsize=10)
-ax.set(xlabel='Models', ylabel='Time (minutes)')
-ax.set_title("Time to Train Models")
 plt.tight_layout()
 plt.savefig('graphs/time.png')
 plt.show()
