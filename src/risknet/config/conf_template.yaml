@@ -6,6 +6,8 @@ general:
 data:
   titanic_root: gs://albell-test/
   fm_root : YOUR_FM_ROOT #TODO: Add your fm_root
+  fm_username : YOUR_FM_USERNAME #TODO: Add your fm_username
+  fm_password: YOUR_FM_PASSWORD #TODO: Add your fm_password
   files:
     - !!python/tuple ['monthly.parquet', 'dev_labels.parquet', 'dev_reg_labels.parquet']
 model:
