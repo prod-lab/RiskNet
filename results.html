@@ -4,41 +4,100 @@
   <link rel="stylesheet" href="results.css">
 </head>
 <body>
+
   <div class="container">
-    <center>
-      <div class="menu">
-        <ul>
-          <a href="index.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
-          </a>
-          <a href="EDA.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
-          </a>
-          <a href="model.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
-          </a>
-          <a href="results.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
-          </a>
-          <a href="tutorial.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
-          </a>
-          <a href="team.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
-          </a>
-        </ul>
-      </div>
-    </center>
+    <center>       
+    <div class="menu">
+    <ul>
+      <a href="index.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
+      </a>
+      <a href="EDA.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
+      </a>
+      <a href="model.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
+      </a>
+      <a href="results.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
+      </a>
+      <a href="tutorial.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
+      </a>
+      <a href="team.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
+      </a>
+      </ul>
+      </center>
+  </div>
+  
     <div class="banner">
-      <div class="text">
         <center>
             <h1>Results</h1>
         </center>
-          <p style:"text-align:center">
-            The problem with wanting is that it makes us weak
-          </p>
-     </div>
   </div>
+
+  <!-- Content -->
+  <main class="content">
+    <!--- Summary --->
+    <section>
+      <h1>Summary of Results</h1>
+      <p>As originally hypothesized, <b>increasing the amount of training data led to better performance. However, it also cost more: the time (resources) increased exponentially.</b></p>
+      <p>We hope to use our findings to open interesting conversations with policy analysts and bank representatives about which mortage risk models are feasible to rely on.</p>
+    </section>
+  
+  <!-- Looking over performance in terms of AUC, precision -->
+  <section>
+    <h2>Models at First Glance: Visualizing Predictive Performance</h2>
+
+    <p>Firstly, let's evaluate how each model iteration performed in terms of <a href="#"><b>ROC AUC</b></a> and <a href="#"><b>precision</b></a>.</p>
+    <p>As a reminder:</p>
+    <ul>
+      <li><b>AUC</b> is a measure of overall performance (both correctly predicting default AND not default).</li>
+      <li><b>Precision</b> is a measure of how many true positives (<b>correctly predicting default</b>) there are out of the total (<b>correctly OR incorrectly predicted default</b>).</li>
+    </ul>
+    <p></p>
+    <p></p>
+    <h4>By measuring both of these metrics, we can get a nuanced understanding of how well the model performs overall <i>and</i> in relation to false positives.</h4>
+    <hr class="dotted">
+    <div class="row">
+      <div class="column">
+        <img src="website_graphs/aucs.png", alt="AUC increases linearly with each model", width="100%">
+        <figcaption>AUCs for each model. References to each model <a href="model.html">here</a>.</figcaption>
+      </div>
+      <div class="column">
+        <img src="website_graphs/prs.png" alt="Precision increases exponentially with each model" style="width:100%">
+        <figcaption>Precision for each model. References to each model <a href="model.html">here</a>.</figcaption>
+      </div>
+      </div>
+      <p>Main Idea: <b>As the amount of data (instances OR features) increases, performance improves. Specifically, AUC increases linearly while precision increases exponentially</b>.</p>
+      <p>Here are some highlights:</p>
+      <ul>
+        <li>AUC (overall performance) increases roughly linearly when adding more features (see <code>original</code> in yellow compared to <code>credit score</code>, as well as <code>feature_eng_with_parquet</code> as compared to <code>original with parquet</code>)</li>
+        <li>There is about a 15% increase from our baseline (<code>credit score</code>) model compared to our FE model (<code>feature_eng_with_parquet</code>). </li>
+        <li>Precision goes up exponentially as more features and data are added to the model (almost 30% jump from baseline to last model)</li>
+        <li>There is a 18% jump in precision when we add feature engineering into the mix</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Models at Second Glance: Cost using Time as a Proxy</h2>
+
+      <p>To get a nuanced understanding of the model performance, we also measured the time to run the model.</p>
+      <p><b>Time</b> represents the time taken to initialize, train, and evaulate each model. Time is measured in minutes on the graph.</p> 
+      <p><b>We can see time to run the model as representative (or a <i>proxy</i>) of the cost in resources, computing, and money to process a model.</b></p>
+      <hr class="dotted">
+      <img src="website_graphs/time.png", alt="Time increases exponentially with each model", style="width:100%">
+      <figcaption>Time to run each model. References to each model <a href="model.html">here</a>.</figcaption>
+      <p>Main Idea: <b>Time (cost) goes up exponentially as we feed the model more data to train/learn from.</b></p>
+      <p>Here are some other highlights:</p>
+      <ul>
+        <li>We can see that loading data from parquet also increases time. Our theory is that this is the loading/storing time. If we used even more data, the cost of loading using parquet would be "worth it".</li>
+        <li>Feature engineering took almost 2x more cost than <code>original_with_parquet</code>. However, this corresponds to almost 2x more precision.</li>
+      </ul>
+    </section>
+  </main>
+
   <footer class="footer">
     <p>RiskNet &copy; 2024. All rights reserved.</p>
   </footer>
