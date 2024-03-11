@@ -6,20 +6,58 @@ import pandas as pd
 
 start = time.time()
 
-'''Define how to get AUC, PR, and Times from pipeline.pipeline() output'''
 def auc(models):
+    '''
+    Gets the test AUC values from the output `models`
+
+    Parameters
+    ----------
+    models : A list of model outputs that looks like this: List[cs, og, og_parquet, all_in]
+    Each model output looks like this: List[List[Float], List[Float], List[Float], Float]
+        For each model, we get a list of [AUC, precision, recall, and time] values.
+
+    Returns
+    -------
+    List of AUC values from each model
+    '''
     values = []
     for model in models:
         values.append(model[0][2])
     return values
 
 def pr(models):
+    '''
+    Gets the test precision values from the output `models`
+
+    Parameters
+    ----------
+    models : A list of model outputs that looks like this: List[cs, og, og_parquet, all_in]
+    Each model output looks like this: List[List[Float], List[Float], List[Float], Float]
+        For each model, we get a list of [AUC, precision, recall, and time] values.
+
+    Returns
+    -------
+    List of precision values from each model
+    '''
     values = []
     for model in models:
         values.append(model[1][2])
     return values
 
 def times(models):
+    '''
+    Gets the time values from the output `models`
+
+    Parameters
+    ----------
+    models : A list of model outputs that looks like this: List[cs, og, og_parquet, all_in]
+    Each model output looks like this: List[List[Float], List[Float], List[Float], Float]
+        For each model, we get a list of [AUC, precision, recall, and time] values.
+
+    Returns
+    -------
+    List of time values from each model
+    '''
     values = []
     for model in models:
         values.append(model[3])
@@ -29,7 +67,8 @@ def times(models):
 '''
 Iterate to generate:
 - Credit score model (cs): The only feature is credit score. Loaded using pandas
-- Original Gangster model (OG): the legacy code from Rod's project. Loaded using parquet
+- Original Gangster model (og): the legacy code from Rod's project. Loaded using pandas.
+- Original Gangster Parquet model (og_parquet): the legacy code from Rod's project. Loaded using parquet.
 - All optimizations added (all_in): OG + parquet + feature engineering. Loaded using parquet
 '''
 

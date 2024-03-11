@@ -3,17 +3,34 @@ import numpy as np
 import dask.dataframe as dd
 import dask.array as da
 
-'''
-Converts the Freddie Mac .txt files into a .parquet partitions that are stored in the src/data/ folder.
-
-inputs:
-- data1 (str): filename for .txt that contains the "historical_data_time" file. For 2009 Q1, this file is called 'historical_data_time_2009Q1.txt'
-- data2 (str): filename for .txt that contains the "historical_data" file. For 2009 Q1, this file is called 'historical_data_2009Q1.txt'.
-- fm_root (str): file root path as described in /config/conf.yaml. EX: "src/risknet/data/"
-
-output: None
-'''
 def parquet_convert(data1, data2, fm_root):
+    '''
+    Converts the Freddie Mac .txt files into .parquet partitions that are stored in the src/data/ folder.
+
+    Parameters
+    ----------
+    data1 : str
+        Filename for .txt that contains the "historical_data_time" file. 
+        For 2009 Q1, this file is called 'historical_data_time_2009Q1.txt'.
+    data2 : str
+        Filename for .txt that contains the "historical_data" file.
+        For 2009 Q1, this file is called 'historical_data_2009Q1.txt'.
+    fm_root : str
+        File root path as described in /config/conf.yaml. 
+        Example: "src/risknet/data/"
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - The function assumes the existence of files in the fm_root location: data1 and data2 (see notes above)
+    - The function assumes the presence of specific file names in the `config` file: 'org.parquet', 
+    'dev_labels.parquet', and 'dev_reg_labels.parquet'
+    - Partitions the .txt file into 50 partitions to read in
+    - This function only needs to be run ONCE to generate parquet files to read.
+    '''
     fm_root = fm_root
     monthly = dd.read_csv(fm_root+data1, sep='|', header = None,dtype={23: 'object',
            24: 'object',

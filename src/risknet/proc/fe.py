@@ -7,16 +7,21 @@ import pandas as pd
 import logging
 logger = logging.getLogger("freelunch")
 
-#Local imports
-#from risknet.proc import encoder
-
-'''
-Uses featuretools's DFS method to generate new features from df.pkl
-
-input: df = DataFrame pulled from df.pkl that contains all cleaned/formatted features
-output: returns DataFrame with multiple generated features
-'''
 def fe(df, fm_root):
+    '''
+    Uses featuretools's DFS method to generate new features from a df.
+    Also saves new features in a pickle file called combo.pkl
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Encoded/scaled DataFrame passed in from pipeline
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with multiple generated features
+    '''
     #Create an EntitySet that stores dataframe
     es = ft.EntitySet(id="data")
     es = es.add_dataframe(

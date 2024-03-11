@@ -18,21 +18,39 @@ from risknet.config import handlers
 # #load data
 # parquet.parquet_convert()
 
-
-'''
-label_proc: defines "default" and "progress" for a loan. Also creates dev_labels.pkl, dev_reg_labels.pkl to store default status (whether a loan has defaulted) and progress (how many payments were made).
-
-inputs:
-- fm_root (str) : the location of the FM data files. Currently it should be "/data/".
-- label_sets (List[Tuple[str, str, str]]) : a list of Tuples, where each Tuple is (str, str, str). 
-For each Tuple (str, str, str), the first str = the name of the freddie mac dataset (either 2009 data, 2014 data, etc.).
-The second two strs are the .pkl names for the .pkl files that will store "default" and "progress" data for the freddie mac dataset.
-If the len(List) > 1, then we are pulling data from multiple years.
-- parquet (bool): indicates whether to load data from the partitioned parquet files or to load data using pandas
-
-output: None
-'''
 def label_proc(fm_root, label_sets, parquet=True):
+    '''
+    Defines "default" and "progress" for a loan.
+    Also creates dev_labels.pkl, dev_reg_labels.pkl to store default status (whether a loan has defaulted)
+    and progress (how many payments were made).
+
+    Parameters
+    ----------
+    fm_root : str
+        The location of the FM data files. Currently it should be "/data/".
+    label_sets : list of tuples
+        A list of tuples, where each tuple contains three strings:
+        - The name of the Freddie Mac dataset (e.g., "2009 data", "2014 data", etc.).
+        - The name of the .pkl file to store "default" data for the corresponding dataset.
+        - The name of the .pkl file to store "progress" data for the corresponding dataset.
+        If the length of the list is greater than 1, data is pulled from multiple years.
+    parquet : bool, optional
+        Indicates whether to load data from the partitioned Parquet files or to load data using pandas.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - The function assumes the presence of specific files at `fm_root`: 'org.parquet', 
+    'dev_labels.parquet', and 'dev_reg_labels.parquet' for parquet operations; 
+    or their '.pkl' counterparts and a historical data text file for pandas operations.
+    - The test set is determined by taking the most recent `test_size` entries based 
+    on the 'first_payment_date'.
+    - Assumes specific column names for merging and operations, including 'loan_sequence_number',
+    'first_payment_date', and various columns to be dropped as defined in `drop_cols`.
+    '''
 
     performance_cols: List[str] =  ["loan_sequence_number", "monthly_reporting_period", "current_actual_upb",
                                    "current_loan_delinquency_status", "loan_age",

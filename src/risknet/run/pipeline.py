@@ -1,17 +1,3 @@
-
-'''
-This is where everything runs!
-We call various functions from .model, .reducer, .encoder, etc. step-by-step to run the pipeline.
-Check out the comments to see what each part of the code does.
-
-Inputs:
-- fe_enabled: bool: whether the model includes feature engineering step (True) or not (False)
-- baseline: whether the model only uses credit score as a feature (True) or uses all features from the legacy code (False)
-- p_true: whether the model loads data using parquet (True) or only using pandas and .pkl files (False)
-
-Output: List: [auc, pr, recall, time] for a given model
-'''
-
 #Global Imports:
 import pandas as pd
 from pandas import DataFrame
@@ -32,6 +18,35 @@ from risknet.run import model
 
 #Default values: use feature engineered labels; do NOT focus on only credit score (baseline); use parquet
 def pipeline(fe_enabled=True, baseline=False, p_true=True):
+    '''
+    This is where everything runs!
+    We call various functions from .model, .reducer, .encoder, etc. step-by-step to run the pipeline.
+    Check out the comments to see what each part of the code does.
+
+    Parameters
+    ----------
+    fe_enabled: Boolean, optional
+        Defines whether to run feature engineering on the dataframe or not.
+        Default value is True
+
+    baseline: Boolean, optional
+        Defines whether to only use credit score (True) or use all features (False) to train/evaluate the model
+        Default value is False
+    
+    p_true: Boolean, optional
+        Defines whether to use data loaded from parquet (True) or use pandas data (False) to train/evaluate the model
+        Default value is True
+
+    Returns
+    -------
+    List[List[Float], List[Float], List[Float], Float] 
+    Returns [auc, pr, recall, time] values as result from evaluating the model.
+
+    Notes
+    -------
+    Loads data from the file path defined in config/conf.yaml. If this file path is not up-to-date, the pipeline will break.
+    See other files for information on each function run.
+    '''
     logger = logging.getLogger("freelunch")
 
     #This ensures the info-level logs get stored in a new file called "test.log"
@@ -122,7 +137,7 @@ def pipeline(fe_enabled=True, baseline=False, p_true=True):
         df = fe.fe(df, fm_root)
 
     #Training the XGB Model
-    print(df.columns)
+    #print(df.columns)
     data, time = model.xgb_train(df, fm_root, baseline=baseline, cat_label='default')
     auc, pr, recall = model.xgb_eval(data)
 

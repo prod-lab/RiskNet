@@ -21,64 +21,114 @@ non_train_columns: List[str] = ['default', 'undefaulted_progress', 'flag', 'loan
 
 #Functions:
 #Define datatypes
-'''
-datatype: sets numerical variables as type int64 and categorical variables as strings
-input:
-- df (DataFrame): passed in after Reducer
-'''
 def datatype(df):
+    '''
+    Sets numerical variables as type int64 and categorical variables as strings.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame passed in after reducer.reduce()
+
+    Returns
+    -------
+    df : pandas.DataFrame
+    '''
     df.loc[:, numericals] = df.loc[:, numericals].astype('int64')
     df.loc[:, categoricals] = df.loc[:, categoricals].astype(str)
     return df
 
-'''
-num_null: defines null values for numerical columns
-input:
-- df (DataFrame): passed in after Reducer
-'''
 def num_null(df):
+    '''
+    Defines null values for numerical columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     numerical_null_map: Dict[str,int] = {'credit_score':9999, 'number_of_units':99, 'orig_combined_loan_to_value':999,
                             'dti_ratio':999, 'original_ltv':999, 'number_of_borrowers':99}
     for k,v in numerical_null_map.items():
         df[k] = np.where(df[k] == v, np.nan, df[k])
     return df
 
-'''
-cat_null: defines null values for categorical columns
-input:
-- df (DataFrame): passed in after Reducer
-'''
 def cat_null(df):
+    '''
+    Defines null values for categorical columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     categorical_null_map: Dict [str,str] = {'first_time_homebuyer':'9', 'occupancy_status': '9', 'channel':'9', 'property_type':'99', 'loan_purpose':'9'}
     for k,v in categorical_null_map.items():
         df[k] = np.where(df[k] == v, np.nan, df[k])
     return df
 
-'''
-inf_null: replaces infinite values with null values
-input:
-- df (DataFrame): passed in after Reducer
-'''
 def inf_null(df):
+    '''
+    Replaces infinite values with null values.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     df = df.replace([np.inf, -np.inf], np.nan)
     return df
 
-'''
-cat_enc: creates "was_missing" columns for each categorical giving binary 0/1 missing/present; also replaces NA with missing in categorical cols
-input: 
-- df (DataFrame)
-'''
 def cat_enc(df):
+    '''
+    Creates "was_missing" columns for each categorical column, giving binary 0/1 for missing/present values.
+    Also replaces NA with "missing" in categorical columns.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     for i in categoricals:
         df["was_missing_" + i] = np.where(df[i].isnull(), 1, 0)
     df[categoricals]: DataFrame = df[categoricals].fillna("missing")
     return df
 
-'''
-ord_enc: fits Ordinal Encoder on training data and ordinally encodes all columns. Also puts ordinal encoder into a .pkl file for future use.
-input: df (DataFrame)
-'''
 def ord_enc(df, fm_root):
+    '''
+    Fits Ordinal Encoder on training data and ordinally encodes all columns.
+    Also saves the ordinal encoder into a .pkl file for future use.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     ordinal: OrdinalEncoder = OrdinalEncoder()
     ordinal.fit(df.loc[df.flag == 'train'], categoricals) #Fit encoder on train
     with open(fm_root + 'ordinal.pkl', 'wb') as f:
@@ -87,16 +137,28 @@ def ord_enc(df, fm_root):
     df = pd.concat([df, ordinal.transform(df, categoricals)], axis=1)
     return df
 
-'''
-rme: Performs regularized mean encoding on data in repository. Fits on training data. Saves RME object in a pickle file and then applies to all non-categorical data. 
-For numerical data, creates is_missing columns that document whetehr the value is missing; also fills NAs with 0
-inputs:
-- df (DataFrame)
-- fm_root (str): location of data in repository
-- cat_label (str): categorical columns in repository. Usually 'default'.
-'''
 def rme(df, fm_root, cat_label='default'):
-    '''Regularized Mean Encoding'''
+    '''
+    Performs regularized mean encoding on data in repository.
+    Fits on training data and saves RME object in a pickle file.
+    Applies encoding to all non-categorical data.
+    For numerical data, creates "is_missing" columns documenting whether the value is missing,
+    and fills NAs with 0.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+    fm_root : str
+        Location of data in repository.
+    cat_label : str, optional
+        Categorical columns in repository, defaults to 'default'.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     rme = RegularizedMeanEncoder()
     rme.fit_faster(df.loc[df['flag'] == 'train'].loc[:,
                         [cat_label] + categoricals],
@@ -115,13 +177,24 @@ def rme(df, fm_root, cat_label='default'):
     df[numericals]: DataFrame = df[numericals].fillna(0)
 
     return df
-'''
-ff: feature filtering (removing useless variables)
-inputs:
-- df (dataframe)
-- fm_root (location of data)
-'''
+
 def ff(df, fm_root):
+    '''
+    Performs feature filtering (removing useless variables).
+    Puts unused variables in "badvars.pkl" and remaining useful, unscaled variables in "df_unscaled.pkl".
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+    fm_root : str
+        Location of data.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     train_columns: List[str] = [i for i in df.columns.to_list() if i not in non_train_columns]
 
     #Identify useless variables and save into badvars.pkl
@@ -136,14 +209,25 @@ def ff(df, fm_root):
     with open(fm_root + 'df_unscaled.pkl', 'wb') as f:
         pickle.dump(df, f)
     return df
-'''
-scale: scaling the dataset and saving min/max/scaled dataframe into .pkls
-inputs:
-- df (dataframe)
-- fm_root (location of data)
-'''
+
 def scale(df, fm_root):
-    '''Scaling'''
+    '''
+    Scales the dataset and saves min/max/scaled DataFrame into .pkl files.
+    Stores the final scaled DataFrame in df.pkl.
+    Returns the scaled DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+    fm_root : str
+        Location of data.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+    '''
     train_columns: List[str] = [i for i in df.columns.to_list() if i not in non_train_columns]
     #train_columns.remove('loan_sequence_number') #This is not a numerical column so it can't be scaled with min/max subtraction
 
@@ -161,8 +245,7 @@ def scale(df, fm_root):
     df.loc[:, train_columns] = inf_null((df.loc[:, train_columns] - train_mins) / (train_maxs - train_mins)) #Scaling values
     df.dropna(axis=1, how='all', inplace=True) #Drop any columns that are ONLY comprised of NaN values
 
-    '''Store dataframes and labels'''
-
+    #Store dataframes and labels
     with open(fm_root + 'df.pkl', 'wb') as f:
         pickle.dump(df, f)
     
@@ -170,6 +253,53 @@ def scale(df, fm_root):
 
 #Classes:
 class RobustHot:
+    '''
+    Encode categorical integer features as a one-hot numeric array.
+
+    This class transforms categorical features to a one-hot numeric array, where each
+    categorical feature is transformed into a new binary column (one-hot vector) indicating
+    the presence of that feature in the original sample.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing the data to encode
+    cols_to_transform: List[str]
+        List containing the names of columns to one-hot encode
+    sep: str = "__"
+        String containing the separator when creating new column names for encoded data
+    dummy_na: bool = True
+        Boolean defining whether to create a dummy variable for NA values
+    drop_first: bool = False
+        Boolean defining whether to drop the first category level in each feature
+    return_all: bool = False
+        If True, return both encoded and non-encoded categorical values. If false, only return the robust-encoded columns.
+
+    Attributes
+    ----------
+    self.cat_dummies : list of str, default=[]
+        List containing the names of the categorical columns to iterate over
+    self.processed_columns : str, default=''
+        Name of the processed columns in the output DataFrame.
+    self.sep : str, default='__'
+        Separator used to concatenate feature names with category names in the generated dummy variables.
+    self.dummy_na : bool, default=True
+        Whether to create a dummy variable for NA values. If True, a column with all zeros is created
+        for NA values in the original categorical variable.
+    self.drop_first : bool, default=True
+        Whether to drop the first category level in each feature to avoid multicollinearity. If True,
+        the first category level is dropped and only n-1 levels are encoded.
+    self.cols_to_transform : list of str, default=[]
+        List containing the names of columns to be transformed using one-hot encoding.
+
+    Methods
+    -------
+    fit_transform(self, df: DataFrame, cols_to_transform: List[str], sep: str = "__", dummy_na: bool = True,
+                      drop_first: bool = False, return_all: bool = False)
+        Fit the OneHotEncoder to the given data.
+    transform(self, df, return_all=False)
+        Transform the given data using one-hot encoding and return encoded DataFrame.
+    '''
     def __init__(self):
 
         self.cat_dummies: List[str] = []
@@ -223,7 +353,45 @@ class RobustHot:
 
 
 class RegularizedMeanEncoder:
+    '''
+    Scale the continuous integer features using RME.
 
+    This class scales continuous numeric features based on RME, where each
+    numeric feature is scaled to show frequency.
+
+    Parameters
+    ----------
+    df: pd.DataFrame
+        Contains the numerical data to be scaled
+    targetLabel: str
+        Contains the name of the target/y variable. Usually set as "default" 
+    colsToTransform: List[str]
+        Contains the names of numerical columns to scale
+    a: Int
+        Alpha value to adjust RME values. Default value 1.
+    earlyStop: Int.
+        Defines how many rounds should traverse before early stopping. Default value is None
+    defaultPrior: Int.
+        Defines the mean/scaling value if not None. Default value None
+
+    Attributes
+    ----------
+    self.levelDict: Dict = {}
+        Each key saves the dataframe's column. The value corresponds to that column's mean value.
+    self.nan: float = np.nan
+        Defines the NA value for every column. Default value is np.nan
+    self.defaultPrior: float = None
+        Defines the mean to regularize on. Default value is None and will be defined in fit()
+
+    Methods
+    -------
+    fit(self, df, targetLabel, colsToTransform, a=1, earlyStop=None, defaultPrior=None)
+        Fits the RME using either the defaultPrior or the calculated mean of each column. Not currently used in pipeline.
+    fit_faster(self, df, targetLabel, colsToTransform, a=1, early_stop=None, default_prior=None)
+        Fits the RME "faster". Does not take early stopping as a possibility. Currently used in pipeline.
+    transform(self, transformFrame, colsToTransform)
+        Uses fitted RME object to transform the dataframe columns. Returns modified dataframe
+    '''
     def __init__(self):
 
         self.levelDict: Dict = {}
@@ -292,6 +460,44 @@ class RegularizedMeanEncoder:
 
 
 class OrdinalEncoder:
+    '''
+    Encode ordinal categorical features as an ordinal value.
+
+    This class transforms categorical features to an ordinal value, where each
+    categorical value is transformed into an integer from 1 - (n-1) indicating
+    the ordinal value. (n = number of ordinal levels in the variable)
+
+    Parameters
+    ----------
+    df: DataFrame
+        Contains ordinal columns to fit and transform upon
+    cols_to_fit: List[str]
+        Defines the names of columns to fit the encoding object on
+    rare_high = True
+        Defines whether to perform ordinal encoding and add a column for None values. If not, all values are 0. Default value is None.
+    missing_name = "XXXXXX"
+        Defines the [str] that the encoder use as a column name indicate that it counts null values. Default value is "XXXXXX"
+    cols_to_transform: List[str]
+        Defines the names of columns to transform using encoding object
+
+    Attributes
+    ----------
+    self.level_dict = {}
+        Stores the index (sorted by frequency) of each ordinal value.
+    self.rare_high: Boolean
+        Defines whether to perform ordinal encoding and add a column for None values. If not, all values are 0. Default value is None.
+    self.missing_name = str
+        Defines the [str] that the encoder use as a column name indicate that it counts null values. Default value is None
+    self.element_length = None
+        Defines how many unique ordinal objects are in a given column. Default value is None.
+
+    Methods
+    -------
+    fit(self, df: DataFrame, cols_to_fit: List[str], rare_high = True, missing_name = "XXXXXX"):fit(self, df: DataFrame, cols_to_fit: List[str], rare_high = True, missing_name = "XXXXXX")
+        Fits the ordinal encoder using the dataframe and cols_to_fit.
+    transform(self, df: DataFrame, cols_to_transform: List[str])
+        Transforms the cols_to_transform in df.
+    '''
     def __init__(self):
         self.level_dict = {}
         self.rare_high = None
