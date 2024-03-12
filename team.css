@@ -17,29 +17,54 @@ body {
     cursor: pointer; 
   }
 
-
-.column {
-  float: left;
-  width: 30.3%;
-  margin-bottom: 16px;
-  padding: 0 8px;
+.row1, .row2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* Adjust the alignment as needed */
 }
 
-@media screen and (max-width: 650px) {
+
+.column {
+  width: 32.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+@media screen and (min-width: 601px) and (max-width: 999px) {
   .column {
-    width: 100%;
-    display: block;
+    max-width: 33.33%; /* Three columns for medium screens */
+  }
+}
+
+/* Ensure that the column takes full width on small screens */
+@media screen and (max-width: 600px) {
+  .column {
+    max-width: 100%;
   }
 }
 
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
   background: white;
   color: black;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
+
+/* Image container with fixed aspect ratio */
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1; /* Adjust this value based on your desired aspect ratio */
+  object-fit: cover;
+}
+
 
 .container {
   padding: 0 16px;
+  flex: 1; /* Makes the container fill the card */
 }
 
 .container::after, .row::after {
@@ -77,6 +102,21 @@ body {
   font-size: 40px;
 }
 
+.button {
+  border: none;
+  outline: 0;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  margin-top: auto; /* Pushes the button to the bottom */
+}
+
+.button:hover {
+  background-color: #555;
+}
 .mentor p {
   color: white;
   text-align: center; 
