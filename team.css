@@ -51,6 +51,7 @@ body {
   color: black;
   margin-bottom: 16px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+   
 }
 
 /* Image container with fixed aspect ratio */
@@ -59,6 +60,9 @@ body {
   height: auto;
   aspect-ratio: 1; /* Adjust this value based on your desired aspect ratio */
   object-fit: cover;
+}
+.card {
+  height: 650px; /* Adjust based on your content */
 }
 
 
