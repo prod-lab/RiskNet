@@ -1,9 +1,0 @@
-title: Capstone project
-email: email@example.com
-description: "This is my awesome site"
-url: "https://prod-lab.github.io/RiskNet/"
-
-# Build settings
-theme: jekyll-theme-minimal 
-plugins:
-  - jekyll-feed
