@@ -61,10 +61,10 @@ body {
   aspect-ratio: 1; /* Adjust this value based on your desired aspect ratio */
   object-fit: cover;
 }
-/*This seemed to mess up the scaling of the meet the team page?*/
-/* .card {
+
+.card {
   height: 750px; 
-} */ 
+} 
 
 
 .container {
