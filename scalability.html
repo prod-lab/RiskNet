@@ -38,67 +38,32 @@
     <!-- Starting content-->
     <main class="content">
       <section>
-        <h2>What Do The?se Models Mean</h2>
-        <p>Remember, our goal in this research project is to <b>improve financial risk modeling using machine learning + techniques</b>.</p>
-        <p>To do this, we generated multiple machine learning models which predicted mortgage default. By generating multiple models which use different techniques and processes, we can compare (and visualize!) what works and what doesn't.</p>
-        <p>We will define and explore these models below.</p>
-        <p class="small">Psst! If you want to skip straight to results, check out our <a href="results.html", target="_blank">Results</a> tab!</p>
+        <h2>What Tools Are We Using For Parallelsim?</h2>
+        <p>In order to maximize the available computational resources and increase the end-to-end runitme and performance of our pipeline, we mainly used Dask and Ray. We primarily used dask as a pandas replacement, in order 
+          to attain faster and more efficient data processing at various stages of our pipeline, since dask is a parallelized framework. Additionally, we used the Ray Core API at different throughout our pipeline to speed up code that was 
+          The ray core changes will likely be more apparent with larger computational workloads and resourcees available. We are currently exploring the Ray Tune API in order to implement distributed hyperparameter tuning for our pipeline. Distributed hyperparemeter tuning would help immensley
+          with our model's training time, as it can parallelize the hyperparameter-tuning process. This would enable us to not only to achieve a faster runtime, but it would also allow us to potentially feed in larger datasets for our model to train on, which could lead to benefits in terms of model performance. 
+        </p>
+      </section>
+      <section>
+        <h2>Scaling With AWS</h2>
+        <p> 
+            We intially planned on scaling our pipeline with AWS. Specificlaly, we would be deploying a cluster of AWS-EC2 Spot instances, and use Ray's provided API to create a ray cluster.
+            This would allow us to scale our pipeline across various nodes, which would increase our runtime dramatically. However, due to logistical setbacks, we were unable recieve access to . However, scaling with AWS is likely quite simple and would require minimal changes to our current pipeline 
+            thanks to Ray's simple and robust API. As a result, we would like to eventually deploy our workload on AWS in the future. Of course, one important consideration with pivoting to AWS is cost. We are planning to use EC2 instances, and a table showing rough cost and performance metrics of an EC2 instance is shown below. 
+        </p>
+        <img src="cost_table.jpg" alt="cost table">
+        <p>
+          From the table above, we can see the estimated costs for running RiskNet on various sized nodes on AWS are relatively small. However, it is important to note that the largest recorded node size is almost half the cost of the smallest node size. When we scale up our model with more worker nodes, it will be more cost effective to use the larger node sizes than the smaller nodes because the overall runtime will be faster per node.
+        </p>
       </section>
 
       <section>
-        <h2>General Model Decisions:</h2>
-        <p>AKA: What is consistent for all models that we implemented?</p>
-        <p><b>Model Architecture:</b> Thanks to domain research and a suggestion from our mentor, we chose to exclusively build all our machine learning model instances using a library called <b>XGBoost</b>. XGBoost excels<sup><a href="https://www.analyticsvidhya.com/blog/2024/01/xgboost-for-time-series-forecasting/" target="_blank" id="ref1">1</a></sup> at synthesizing and modeling dense tabular timeseries data (which is the data we are using).</p>
-        <p><b>Language: </b>We worked in Python<sup><a href="https://www.python.org/" target="_blank" id="ref2">2</a></sup> as we were most familiar with the language.</p>
-        <p><b>Environment: </b>To ensure we were all working on the same OS, we ran and hosted our code on UCSD's DSMLP. You can find out more about how we used DSMLP <a href="tutorial.html" title="Jump to Tutorial Page">here</a>. We also used Docker Images<sup><a href="https://docs.docker.com/get-started/" target="_blank" id="ref3">3</a></sup> to standardize our OS.</p>
-        <hr></hr>
-        <sup id="fn1">1. ["XGboost for Timeseries Forecasting", Analytics Vidha]<a href="https://www.analyticsvidhya.com/blog/2024/01/xgboost-for-time-series-forecasting/" title="Jump back to footnote 1 in the text.">↩</a></sup>
-        <br>
-        <sup id="fn2">2. [Python.org]<a href="https://www.python.org/" title="Jump back to footnote 2 in the text.">↩</a></sup>
-        <br>
-        <sup id="fn3">3. [Docker Docs]<a href="https://docs.docker.com/get-started/" title="Jump back to footnote 3 in the text.">↩</a></sup>
-      </section>
-
-      <section>
-        <h2>Specific Model Architecture</h2>
-        <p>Now let's dive into the specific models we are testing.</p>
-        <hr>
-        <h4>The Baseline Model</h4>
-        <p>We wanted this to represent <b>how banks currently predict mortgage defaults using credit score</b>. For simplicity's sake, we assume the bank <b>only</b> uses credit score as its single input.</p>
-        <p>We will use this baseline to contextualize our other models and see if/how much they "improved" performance compared to existing technologies.</p>
-        <ul>
-          <li>Features: Credit Score only</li>
-          <li>Data Loading Tool: Pandas (only able to load 5,000 data points for train/test/val)</li>
-        </ul>
-        <hr>
-        <p>Next, we created <b>model iterations with new techniques/tools to try to beat the baseline model</b></p>
-        <hr>
-        <h4>The Original Model</h4>
-        <p>This code predicts mortgage defaults using <b>credit score and additional contextual information</b> pulled from the Freddie Mac dataset. Additional context information (additional features/columns) includes number of cosigners; which bank the mortgage was approved at; etc.</p>
-        <ul>
-          <li>Features: Credit Score <b>+ Freddie Mac Contextual Columns</b></li>
-          <li>Data Loading Tool: Pandas (only able to load 5,000 data points for train/test/val)</li>
-        </ul>
-        <hr>
-        <h4>The Original + Parquet Model</h4>
-        <p>This code uses the same features/columns as the previous model, but <b>loads data using Parquet</b>. This allows for more data to be loaded into partitions without overwhelming the system's memory.</p>
-        <ul>
-          <li>Features: Credit Score + Freddie Mac Contextual Columns</li>
-          <li>Data Loading Tool: <b>Parquet (able to load 3,000,000+ data points for train/test/val)</b></li>
-        </ul>
-        <hr>
-        <h4>The Original + Parquet + Feature Engineering Model</h4>
-        <p>This code uses the same features and parquet loading as the previous model, but <b>also applies feature engineering techniques to the columns</b>. 
-          This allows a package called <code>featuretools</code><sup><a href="https://featuretools.alteryx.com/en/stable/index.html" target="_blank" id="ref4">4</a></sup> to recursively
-        synthesize new features from the existing columns to provide more insight and context to data.</p>
-        <p>An example of feature engineering: Given a column <code>Number of Co-Signers</code>, feature engineering can iterate over the column and generate the mean, median, and mode values per zip code. This might help the model contextualize and understand whether a number is important/helps classify default or not.</p>
-        <p>Note: this data uses the <b>most</b> data (both in terms of loading instances and generating columns) out of all model iterations.</p>
-        <ul>
-          <li>Features: Credit Score + Freddie Mac Contextual Columns <b>+ Feature Engineered Context Columns</b></li>
-          <li>Data Loading Tool: Parquet (able to load 3,000,000+ data points for train/test/val)</li>
-        </ul>
-        <hr></hr>
-        <sup id="ref4">4. [Alteryx FeatureTools Documentation Page]<a href="https://featuretools.alteryx.com/en/stable/index.html" title="Jump back to footnote 4 in the text.">↩</a></sup>
+        <h2>Next Steps</h2>
+        <p> 
+          In the future, we plan on further scaling our pipeline using AWS. Specifically, we would like to utilze the AWS S3 Bucket for storing the data for our pieline, and we deploy our workload across a ray cluster on AWS EC2 Instances. A visualization of this architechture is shown below.
+          <img src="scaless.jpg" alt="scale diagram">
+      </p>
       </section>
   
 </body>
