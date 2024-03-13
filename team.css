@@ -61,9 +61,9 @@ body {
   aspect-ratio: 1; /* Adjust this value based on your desired aspect ratio */
   object-fit: cover;
 }
-.card {
+/* .card {
   height: 800px; /* Adjust based on your content */
-}
+} */
 
 
 .container {
