@@ -69,6 +69,9 @@ db.sqlite3-journal
 #config
 /src/risknet/config/conf.yaml
 
+#data in data folder
+src/risknet/data/*
+
 # Flask stuff:
 instance/
 .webassets-cache

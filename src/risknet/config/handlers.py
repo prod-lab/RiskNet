@@ -24,7 +24,7 @@ class Config(object):
 		if abs_config_path:
 			path += abs_config_path
 		else:
-			path += join(pathlib.Path(__file__).parent.resolve(), "conf_template.yaml")
+			path += join(pathlib.Path(__file__).parent.resolve(), "conf.yaml")
 		with open(path, 'r') as stream:
 			try:
 				return yaml.full_load(stream)

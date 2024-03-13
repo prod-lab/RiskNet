@@ -5,19 +5,40 @@ It also defines the Reducer class where we use ts split (timeseries split) t
 
 from pandas import DataFrame
 import pandas as pd
+import dask.dataframe as dd
 import numpy as np
 from typing import List, Tuple
 import pyarrow.parquet as pq
 from datetime import timedelta, date
 from sklearn.model_selection import train_test_split
 
-'''
-reduce: for a given year + that year's labels and progress, concats all 3 datasets together and returns a complete dataset.
-input:
-- fm_root: str: a location where data is held
-- i: Tuple(str, str, str): holds the file names for [(fm_dataset, default_label.pkl, default_progress.pkl)]
-'''
-def reduce(fm_root, i):
+def reduce(fm_root, p_true, test_size=1_000, split_ratio=[0.9, 0.1]):
+    '''
+    For a given year and that year's labels and progress, concatenates all three datasets together
+    and returns a complete dataset.
+
+    Parameters
+    ----------
+    fm_root : str
+        A location where data is held.
+    p_true : bool, optional
+        Determines whether to use the entire parquet-loaded dataset (True) or the first 10 million rows of data using pandas (False).
+    test_size : int, optional
+        The size (number of rows) for the test set.
+    split_ratio : list of float, optional
+        The train/validation ratio of the dataset.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Modified DataFrame.
+
+    Notes
+    -------
+    - Creates a test subset of the [test_size] most recent loan instances. Then uses parquet or pandas to load data and split into train/val.
+    - Assumes existence of org.parquet (generated from parquet.py), dev_labels.parquet, and dev_reg_labels.parquet (generated from label_prep.py) in the fm_root location.
+    - Assumes .parquet and .txt files have the same columns (which they should!)
+    '''
     origination_cols: List[str] = ["credit_score", "first_payment_date", "first_time_homebuyer", "maturity_date",
                                 "metropolitan_division", "mortgage_insurance_percent", "number_of_units",
                                 "occupancy_status", "orig_combined_loan_to_value", "dti_ratio",
@@ -29,20 +50,95 @@ def reduce(fm_root, i):
 
     drop_cols: List[str] = ['maturity_date', 'metropolitan_division', 'original_interest_rate', 'property_state',
                             'postal_code', 'mortgage_insurance_percent', 'original_loan_term']
-
+    
+    #Read the parquet file to get the entire dataset
     temp = pd.read_parquet(fm_root + 'org.parquet')
     temp.columns = origination_cols
     temp = temp.drop(columns = "row_hash")
 
-    df = pd.concat([Reducer.simple_ts_split(temp.merge(
-            pd.read_pickle(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
-            how="inner").merge(
-            pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
-            how="inner").drop(columns=drop_cols), sort_key='first_payment_date', split_ratio=[0.8, 0.1, 0.1])])
+    #Create a separate test subset from entire dataset by finding the most recent entries (sorted by first_payment_date)
+    #The size of this subset will be test_size
+    test_index = temp.shape[0] - test_size
+    temp = temp.sort_values(by=['first_payment_date']) #Indices should stay the same even after we sort!
+    test_cond = [temp.loc[:, 'first_payment_date'].rank(method='first') <= test_index, temp.loc[:, 'first_payment_date'].rank(method='first') > test_index]
+    choices = [np.NaN, 'test']
+    temp['flag'] = np.select(test_cond, choices, default=np.nan)
+    #This will create a column ['flag'] which either indicates 'test' or NaN.
+
+    #Create the separate test dataset. Drop 'drop_cols
+    test = temp.loc[temp['flag'] == 'test'].drop(columns=drop_cols)
+    #Merge with the appropriate files so it gets `default` label
+    test = test.merge(
+                pd.read_pickle(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
+                how="inner").merge(
+                pd.read_pickle(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
+                how="inner")
+    test_indices = list(test.index) #Use test_indices to make sure pandas doesn't read these lines into train/val
+
+    #Now remove the test subset from the parquet dataset so we can split train/val:
+    trainval = temp.loc[temp['flag'] != 'test']
+    
+    #Then we pull train and val data from historical_data_2009Q1!
+    if p_true:
+        df = pd.concat([Reducer.em_simple_ts_split(trainval.merge(
+                pd.read_parquet(fm_root + 'dev_labels.parquet'), on="loan_sequence_number",
+                how="inner").merge(
+                pd.read_parquet(fm_root + 'dev_reg_labels.parquet'), on="loan_sequence_number",
+                how="inner").drop(columns=drop_cols).drop(columns=['flag']), sort_key='first_payment_date', 
+                split_ratio=split_ratio)])
+    else:
+        df = pd.concat([Reducer.em_simple_ts_split(pd.read_csv(fm_root + "historical_data_2009Q1.txt", sep='|', index_col=False, skiprows=test_indices, nrows=10_000_000, names=origination_cols).merge(
+            pd.read_pickle(fm_root + 'dev_labels.pkl'), on="loan_sequence_number", how="inner").merge(
+            pd.read_pickle(fm_root + 'dev_reg_labels.pkl'), on="loan_sequence_number", how="inner").drop(columns=drop_cols), 
+            sort_key='first_payment_date', split_ratio=split_ratio)])
+    
+    #Re-add the test set at the bottom of the dataframe
+    df = pd.concat([df, test], join="inner")
     return df
 
 class Reducer:
+    '''
+    Filters out highly-correlated variables (feature_filter()) and splits the data into train/val.
 
+    Parameters
+    ----------
+    df: DataFrame
+        Dataset (not including test data, which has been removed in reduce())
+
+    sort_key: str
+        String that defines the name of the sorting variable (time variable). Should be `first_payment_date`.
+    
+    split_ratio: List[Float], optional.
+        Defines the split of train/val.
+        Assumes that the list has length 2 and sums up to 1.0. Uses the first value to split the dataset.
+        Default value is [0.9, 0.1]
+
+    Attributes
+    ----------
+    self.varsToRemove = List[str]
+        List of unique column values that either have low standard deviation, high correlation, or high amounts of nulls.
+        Default value is [].
+
+    Methods
+    -------
+    feature_filter(self, df, max_null_ratio=0.7, zero_var_threshold=0.0000000000001, run_correlations=True,
+                       corr_threshold=0.70)
+    Filters out variables that are highly-correlated, have too many null values, or have low standard deviation.
+    Returns a list of variables to remove.
+
+    filter_split(txn_root: str, timestamp:str, drop: List[str], filter_exprs: Tuple[Tuple[str,str]] = (("", ""),),
+                     aged_interval: int = 70, oot_requirement: int = 120, max_lookback_days: int = 180)
+    Splits the dataset into train/val/test given a max lookback window. Deprecated/currently not in use in pipeline.
+
+    simple_ts_split(df: DataFrame, sort_key: str, split_ratio: list = [0.8, 0.1, 0.1])
+    Splits the entire dataset into train/val/test. Deprecated/currently not in use.
+
+    em_simple_ts_split(df: DataFrame, sort_key: str, split_ratio: list = [0.9, 0.1])
+    Splits the entire dataset into train/val. Assumes that test has already been separated out. Currently in use.
+    
+    def random_split(df: DataFrame, split_ratio: float = .8):
+    Splits the entire dataset randomly. Deprecated/currently not in use.
+    '''
     def __init__(self):
         self.varsToRemove = []
 
@@ -122,6 +218,17 @@ class Reducer:
 
       df['flag'] = np.select(conditions, choices, default=np.nan)
       #df['flag'] = np.where(df.loc[:, sort_key].rank(pct=True, method='first') <= split_ratio, 'train', 'test')
+      return df
+
+    @staticmethod #MODIFIED BY EC TO GET TRAIN/TEST/VALIDATION and consistently-sized test size
+    def em_simple_ts_split(df: DataFrame, sort_key: str, split_ratio: list = [0.9, 0.1]):
+      first_div = split_ratio[0]
+      df = df.sort_values(by=[sort_key])
+
+      conditions = [df.loc[:, sort_key].rank(pct=True, method='first') <= first_div, (df.loc[:, sort_key].rank(pct=True, method='first') > first_div)]
+      choices     = ['train', 'val']
+      df['flag'] = np.select(conditions, choices, default=np.nan)
+      print("train size: ", str(df['flag'].value_counts()['train']), ", val size: ", str(df['flag'].value_counts()['val']))
       return df
 
     @staticmethod
