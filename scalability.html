@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>RiskNet</title>
+  <link rel="stylesheet" href="model.css">
+</head>
+<body>
+  <div class="container">
+    <center>
+      <div class="menu">
+        <ul>
+          <a href="index.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
+          </a>
+          <a href="EDA.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
+          </a>
+          <a href="model.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
+          </a>
+          <a href="results.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
+          </a>
+          <a href="scalability.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">Scalability</button></li>
+            </a>
+          <a href="tutorial.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
+          </a>
+          <a href="team.html">
+            <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
+            </a>
+            </ul>
+      </div>
+    </center>
+
+    <header class="banner">
+      <h1Scaling Risknet</h1>
+      <p>What tools and frameworks did we employ to increase scalability, and what are our plans going forward?</p>
+    </header>
+
+    <!-- Starting content-->
+    <main class="content">
+      <section>
+        <h2>What Tools Are We Using For Parallelsim?</h2>
+        <p>In order to maximize the available computational resources and increase the end-to-end runitme and performance of our pipeline, we mainly used Dask and Ray. We primarily used dask as a pandas replacement, in order 
+          to attain faster and more efficient data processing at various stages of our pipeline, since dask is a parallelized framework. Additionally, we used the Ray Core API at different throughout our pipeline to speed up code that was 
+          The ray core changes will likely be more apparent with larger computational workloads and resourcees available. We are currently exploring the Ray Tune API in order to implement distributed hyperparameter tuning for our pipeline. Distributed hyperparemeter tuning would help immensley
+          with our model's training time, as it can parallelize the hyperparameter-tuning process. This would enable us to not only to achieve a faster runtime, but it would also allow us to potentially feed in larger datasets for our model to train on, which could lead to benefits in terms of model performance. 
+        </p>
+      </section>
+      <section>
+        <h2>Scaling With AWS</h2>
+        <p> 
+            We intially planned on scaling our pipeline with AWS. Specificlaly, we would be deploying a cluster of AWS-EC2 Spot instances, and use Ray's provided API to create a ray cluster.
+            This would allow us to scale our pipeline across various nodes, which would increase our runtime dramatically. However, due to logistical setbacks, we were unable recieve access to . However, scaling with AWS is likely quite simple and would require minimal changes to our current pipeline 
+            thanks to Ray's simple and robust API. As a result, we would like to eventually deploy our workload on AWS in the future. Of course, one important consideration with pivoting to AWS is cost. We are planning to use EC2 instances, and a table showing rough cost and performance metrics of an EC2 instance is shown below. 
+        </p>
+        <img src="cost_table.jpg" alt="cost table">
+        <p>
+          From the table above, we can see the estimated costs for running RiskNet on various sized nodes on AWS are relatively small. However, it is important to note that the largest recorded node size is almost half the cost of the smallest node size. When we scale up our model with more worker nodes, it will be more cost effective to use the larger node sizes than the smaller nodes because the overall runtime will be faster per node.
+        </p>
+      </section>
+
+      <section>
+        <h2>Next Steps</h2>
+        <p> 
+          In the future, we plan on further scaling our pipeline with AWS. Specifically, we would like to utilze the AWS S3 Bucket for storing the data for our pieline, and we deploy our workload across a ray cluster on AWS EC2 Instances. A visualization of this architechture is shown below.
+          <img src="scaless.jpg" alt="scale diagram">
+      </p>
+      </section>
+  
+</body>
+
+</html>
