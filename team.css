@@ -61,9 +61,9 @@ body {
   aspect-ratio: 1; /* Adjust this value based on your desired aspect ratio */
   object-fit: cover;
 }
-/* .card {
-  height: 800px; /* Adjust based on your content */
-} */
+.card {
+  height: 860px; 
+}
 
 
 .container {
@@ -81,17 +81,6 @@ body {
   color: grey;
 }
 
-.button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 8px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-}
 
 .button:hover {
   background-color: #555;
@@ -114,12 +103,9 @@ body {
   text-align: center;
   cursor: pointer;
   width: 100%;
-  margin-top: auto; /* Pushes the button to the bottom */
+  margin-top: bottom; /* Pushes the button to the bottom */
 }
 
-.button:hover {
-  background-color: #555;
-}
 .mentor p {
   color: white;
   text-align: center; 
