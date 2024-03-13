@@ -10,15 +10,21 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    padding-bottom: 900px;
   }
 .menu ul{
     display: inline-flex;
-    margin:50px;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 50
+    
   }
+
+
   .menu ul li{
+    
     list-style: none;
-    margin: 0 20px;
-    height: 20px;
+    margin: 9px;
     color: #b2b1b1;
     cursor: pointer; 
   }
@@ -37,18 +43,17 @@ body {
     text-align: center;
   }
   
-.intro{
-    font-size: 25px;
-    color: white;
-    padding-top: 50px;
-    padding-right: 70px;
-    padding-bottom: 50px;
-    padding-left: 70px;
-    background-color: #110c3a;
-    height: 100vh;
-    box-sizing: border-box;
-    text-align: center;
- }
+.intro {
+  font-size: 25px;
+  color: white;
+  padding: 50px;
+  margin: 0 auto; 
+  max-width: 800px; 
+  border-radius: 10px;
+  
+  text-align: justify; 
+}
+
  html {scroll-behavior: smooth;}
 
 

@@ -4,49 +4,76 @@
   <link rel="stylesheet" href="eda.css">
 </head>
 <body>
+
   <div class="container">
-    <center>
-      <div class="menu">
-        <ul>
-          <a href="index.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
-          </a>
-          <a href="EDA.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
-          </a>
-          <a href="model.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
-          </a>
-          <a href="results.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
-          </a>
-          <a href="tutorial.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
-          </a>
-          <a href="team.html">
-          <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
-          </a>
-        </ul>
-      </div>
-    </center>
+    <center>       
+    <div class="menu">
+    <ul>
+      <a href="index.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Home</button></li>
+      </a>
+      <a href="EDA.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">EDA</button></li>
+      </a>
+      <a href="model.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Model</button></li>
+      </a>
+      <a href="results.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Results</button></li>
+      </a>
+      <a href="tutorial.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px">Tutorial</button></li>
+      </a>
+      <a href="team.html">
+        <li><button style="background-color:transparent;color:white;padding: 10px 24px"">Meet the Team</button></li>
+      </a>
+      </ul>
+      </center>
+  </div>
+  
     <div class="banner">
-      <div class="text">
         <center>
             <h1>Exploratory Data Analysis</h1>
+          <p>Click <a href="https://github.com/prod-lab/RiskNet/blob/master/src/risknet/notebooks/automated_EDA.ipynb">here</a> to access the Jupyter Notebook!</p>
         </center>
-          <p style:"text-align:center">
-            We are all in the gutter, but some of us are looking at the stars 
-          </p>
-     </div>
   </div>
-  <div class="nb">
-    <center>
-      <iframe src="automated_EDA.html" width="1300" height="600"></iframe>
-    </center>
-  </div>
-    <footer class="footer">
-      <p>RiskNet &copy; 2024. All rights reserved.</p>
-    </footer>
+
+  <!-- Content -->
+  <main class="content">
+    <!--- Summary --->
+    <section>
+      <h1>Data Used During This Project</h1>
+      <p>The team utilized the <b>Freddie Mac Single-Family Loan-Level dataset</b>, which is regulated and updated by the US’s Federal Housing Finance Agency (FHFA). There is data for about two decades, which are broken down by quarter. The three main advantages of using this dataset is the data quality, quantity, and accessibility.</p>
+      <p>Each quarter has two datasets that are relevent for model creation. The Origination Data file encompasses the loan-level origination details for all loans originated in the quarter. The Monthly Performance data file includes credit performance and actual loss information for each loan on a monthly basis. The data spans from the loan’s acquisition by Freddie Mac until the termination event, or Performance Cutoff Date, which represents the last period of performance data available for any loan in the dataset. Each loan in the origination data file is assigned a unique Loan Sequence Number. The corresponding monthly performance data file may include multiple records with the same Loan Sequence Number, indicating the monthly performance periods associated with a specific loan. 
+</p>
+    </section>
+  
+  <section>
+    <h2>Analyzing the Data in the Columns</h2>
+
+    <p>Before creating the model, the data was thoroughly analyzed to gain better insight on the different features present. Given the dataset’s extensive size, a sample was used for a majority of the analysis. </p>
+    <p>The distribution of each of the numerical columns was plotted to determine the range of the values, as well as checking for outliers. In addition, it helped determine the skewness and symmetry of the data. Subsequently, a heat map was generated to determine the correlation between the numerical columns. </p>
+
+    <p></p>
+    <p></p>
+    <img src="corr.png" alt="Figure 1" style="width:50%;text-align: center">
+    <figcaption>Figure 1 - Correlation between Numerical Columns</figcaption>
+    </section>
+
+    <section>
+      <h2>Taking Care of Null Values</h2>
+
+      <p>Most of the data analysis involved dealing with the extensive amount of null values in select columns.</p>
+      <img src="nulls.png", alt="Figure 2", style="width:50%;text-align: center">
+      <figcaption>Figure 2 - Proportion of Null Values in Each Column in the Dataset</figcaption>
+      <p>A decision the team had to make was whether to drop these columns or impute them later on during the model development process. The tricky part about dropping columns based on perceived irrelevancy is the fact that null values in one column can be dependent on values in another column. To check for such dependencies within the columns, a <b>chi-square goodness of fit test</b> (a statistical hypothesis test used to determine whether a variable is likely to come from a specified distribution or not) was conducted. </p>
+      <p>The columns that were unrelated to the others and had a large number of null values were disregarded during the model training process, which helped it up due to the decrease in data size. </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>RiskNet &copy; 2024. All rights reserved.</p>
+  </footer>
 </body>
 
 </html>

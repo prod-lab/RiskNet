@@ -8,7 +8,8 @@ body {
   text-align: center;
   line-height: 1.6;
 }
-.menu ul{
+
+  .menu ul{
     display: inline-flex;
     margin:50px;
   }
@@ -20,44 +21,69 @@ body {
     cursor: pointer; 
   }
 
-.banner {
-   
+.b1 {
+  background-color: transparent;
+  border: none;
+  color: white;
+  padding: 10px 24px;
+}
+  
+  .active{
+    color: #19dafa !important;
+  }
+  
+  .banner {
     color: white;
     padding: 10px 20px;
     text-align: center;
 }
 
 .content {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
 .content section {
-    background: white;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  background: white;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/*For dotted line separating explanation from graphs*/
+hr.dotted {
+  border-top: 3px dotted #bbb;
+}
+
+/*For putting imgs side-by-side*/
+.column {
+  float: left;
+  width: 48%;
+  padding: 5px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
 code {
-    background: #e9ecef;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-size: 1.1em;
+  background: #e9ecef;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 1.1em;
 }
 
-ol, ul {
-    padding-left: 0px;
-}
 .footer {
-    background: #043a75;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    
+  background: #043a75;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
