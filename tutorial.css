@@ -9,14 +9,15 @@ body {
   line-height: 1.6;
 }
 
-  .menu ul{
+.menu ul{
     display: inline-flex;
-    margin:50px;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 50
   }
   .menu ul li{
     list-style: none;
-    margin: 0 20px;
-    height: 20px;
+    margin: 9px;
     color: #b2b1b1;
     cursor: pointer; 
   }
