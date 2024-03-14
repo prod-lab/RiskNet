@@ -88,4 +88,7 @@ code {
   bottom: 0;
   width: 100%;
 }
+ol, ul {
+    padding-left: 0px;
+}
 
