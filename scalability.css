@@ -8,17 +8,18 @@ body {
     text-align: center;
     line-height: 1.6;
   }
-  .menu ul{
-      display: inline-flex;
-      margin:50px;
-    }
-    .menu ul li{
-      list-style: none;
-      margin: 0 20px;
-      height: 20px;
-      color: #b2b1b1;
-      cursor: pointer; 
-    }
+.menu ul{
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 50
+  }
+  .menu ul li{
+    list-style: none;
+    margin: 9px;
+    color: #b2b1b1;
+    cursor: pointer; 
+  }
   
   .small{
     font-size: 50%;
