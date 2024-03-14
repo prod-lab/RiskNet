@@ -41,7 +41,7 @@
     <!-- Starting content-->
     <main class="content">
       <section>
-        <h2>What Tools Are We Using For Parallelsim?</h2>
+        <h2>What Tools Are We Using For Parallelism?</h2>
         <p>In order to maximize the available computational resources and increase the end-to-end runitme and performance of our pipeline, we mainly used Dask and Ray. We primarily used dask as a pandas replacement, in order 
           to attain faster and more efficient data processing at various stages of our pipeline, since dask is a parallelized framework. Additionally, we used the Ray Core API at different throughout our pipeline to speed up code that was 
           The ray core changes will likely be more apparent with larger computational workloads and resourcees available. We are currently exploring the Ray Tune API in order to implement distributed hyperparameter tuning for our pipeline. Distributed hyperparemeter tuning would help immensley
@@ -64,7 +64,7 @@
       <section>
         <h2>Next Steps</h2>
         <p> 
-          In the future, we plan on further scaling our pipeline with AWS. Specifically, we would like to utilze the AWS S3 Bucket for storing the data for our pieline, and we deploy our workload across a ray cluster on AWS EC2 Instances. A visualization of this architechture is shown below.
+          In the future, we plan on further scaling our pipeline with AWS. Specifically, we would like to utilze the AWS S3 Bucket for storing the data for our pipeline, and we deploy our workload across a ray cluster on AWS EC2 Instances. A visualization of this architecture is shown below.
           <img src="scaless.jpg" alt="scale diagram">
       </p>
       </section>
